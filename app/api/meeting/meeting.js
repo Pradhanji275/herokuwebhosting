@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const API_KEY = 'videoconference_default_secret';
 // const MIROTALK_URL = "http://localhost:3000/api/v1/meeting";
 // const MIROTALK_URL = "https://mirotalk.herokuapp.com/api/v1/meeting";
-const MIROTALK_URL = 'https://videoconference.up.railway.app/api/v1/meeting';
+const KMMEET_URL = 'https://videoconference.up.railway.app/api/v1/meeting';
 
 function getResponse() {
     return fetch(MIROTALK_URL, {

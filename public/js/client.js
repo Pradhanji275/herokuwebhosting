@@ -12,7 +12,7 @@
  * @link    https://videoconference.up.railway.app or https://videoconference.herokuapp.com
  * @license For open source use: AGPLv3
  *          For commercial use: https://github.com/miroslavpejic85/mirotalk#commercial-license-or-closed-source
- * @author  Miroslav Pejic - miroslav.pejic.85@gmail.com
+ * @author  Ankan Ghosh and Ankan Pradhan - ankanpradhan275@gmail.com
  * @version 1.0.0
  *
  */
@@ -928,7 +928,7 @@ function handleRTCDataChannels(peer_id) {
                                 break;
                         }
                     } catch (err) {
-                        console.error('mirotalk_chat_channel', err);
+                        console.error('kmmeet_chat_channel', err);
                     }
                     break;
                 case 'mirotalk_file_sharing_channel':
@@ -936,7 +936,7 @@ function handleRTCDataChannels(peer_id) {
                         let dataFile = msg.data;
                         handleDataChannelFileSharing(dataFile);
                     } catch (err) {
-                        console.error('mirotalk_file_sharing_channel', err);
+                        console.error('kmmeet_file_sharing_channel', err);
                     }
                     break;
             }

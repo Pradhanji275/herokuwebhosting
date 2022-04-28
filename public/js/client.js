@@ -26,7 +26,7 @@ const roomId = getRoomId();
 const peerInfo = getPeerInfo();
 const peerLoockupUrl = 'https://extreme-ip-lookup.com/json/?key=demo2';
 const avatarApiUrl = 'https://eu.ui-avatars.com/api';
-const surveyURL = 'https://www.questionpro.com/a/SurveyPreview';
+const surveyURL = 'https://kmmeet.herokuapp.com/';
 const welcomeImg = '../images/image-placeholder.png';
 const shareUrlImg = '../images/image-placeholder.png';
 const leaveRoomImg = '../images/leave-room.png';
@@ -5286,11 +5286,11 @@ function showAbout() {
         html: `
         <br/>
         <div id="about">
-            <b><a href="https://github.com/miroslavpejic85/mirotalk" target="_blank">Open Source</a></b> project
+            <b><a href="https://github.com/Pradhanji275/herokuwebhosting">Open Source</a></b> project
             <br/><br/>
-            <button class="far fa-heart pulsate" onclick="window.open('https://github.com/sponsors/miroslavpejic85?o=esb')"> Sponsor</button>
+            <button class="far fa-heart pulsate" onclick="window.open('https://github.com/Pradhanji275/herokuwebhosting')"> Sponsor</button>
             <br /><br />
-            Author:<a href="https://www.linkedin.com/in/miroslav-pejic-976a07101/" target="_blank"> Miroslav Pejic</a>
+            Author:<a href="https://www.facebook.com/ankan.pradhan.543" target="_blank"> Ankan Group</a>
         </div>
         `,
         showClass: {

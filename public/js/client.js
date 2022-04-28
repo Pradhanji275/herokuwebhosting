@@ -5288,9 +5288,7 @@ function showAbout() {
         <div id="about">
             <b><a href="https://github.com/Pradhanji275/herokuwebhosting">Open Source</a></b> project
             <br/><br/>
-            <button class="far fa-heart pulsate" onclick="window.open('https://github.com/Pradhanji275/herokuwebhosting')"> Sponsor</button>
-            <br /><br />
-            Author:<a href="https://www.facebook.com/ankan.pradhan.543" target="_blank"> Ankan Group</a>
+            Author:<a href="https://www.linkedin.com/in/miroslav-pejic-976a07101/" target="_blank"> Ankan Group</a>
         </div>
         `,
         showClass: {

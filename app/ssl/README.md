@@ -1,6 +1,6 @@
-## Expose MiroTalk on HTTPS
+## Expose KMMEET on HTTPS
 
-![mirotalk-https](https.png)
+![kmmeet-https](https.png)
 
 1. Generate a `self-signed certificate`
 

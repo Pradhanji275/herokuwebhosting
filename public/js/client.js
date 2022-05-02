@@ -407,7 +407,7 @@ function setButtonsToolTip() {
     setTippy(chatRoomBtn, 'OPEN the chat', 'right-start');
     setTippy(captionBtn, 'OPEN the caption', 'right-start');
     setTippy(myHandBtn, 'RAISE your hand', 'right-start');
-    setTippy(whiteboardBtn, 'OPEN the whiteboard', 'right-start');
+    setTippy(whiteboardBtn, 'OPEN the liveboard', 'right-start');
     setTippy(fileShareBtn, 'SHARE file', 'right-start');
     setTippy(mySettingsBtn, 'SHOW settings', 'right-start');
     setTippy(aboutBtn, 'SHOW about', 'right-start');

@@ -5280,13 +5280,13 @@ function showAbout() {
     Swal.fire({
         background: swalBackground,
         position: 'center',
-        title: '<strong>WebRTC P2P</strong>',
+        title: '<strong>KMMEET</strong>',
         imageAlt: 'mirotalk-about',
         imageUrl: aboutImg,
         html: `
         <br/>
         <div id="about">
-            <b>Open Source</a></b> project
+            <b>Open Source Video Conferencing Project</a></b> project
             <br/><br/>
             Author: Ankan Group</a>
         </div>
@@ -5311,7 +5311,7 @@ function leaveRoom() {
         position: 'center',
         imageAlt: 'mirotalk-leave',
         imageUrl: leaveRoomImg,
-        title: 'Leave this room?',
+        title: 'Do you want to leave this room?',
         showDenyButton: true,
         confirmButtonText: `Yes`,
         denyButtonText: `No`,

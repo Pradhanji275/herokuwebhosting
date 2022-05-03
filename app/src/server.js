@@ -21,9 +21,9 @@ dependencies: {
 */
 
 /**
- * MiroTalk P2P - Server component
+ * KMMEET P2P - Server component
  *
- * @link    https://mirotalk.up.railway.app or https://mirotalk.herokuapp.com
+ * @link    https://mirotalk.up.railway.app or https://projectkmmeet.herokuapp.com
  * @license For open source use: AGPLv3
  *          For commercial use: https://github.com/miroslavpejic85/mirotalk#commercial-license-or-closed-source
  * @author  Miroslav Pejic - miroslav.pejic.85@gmail.com

@@ -5286,7 +5286,7 @@ function showAbout() {
         html: `
         <br/>
         <div id="about">
-            <b>Open Source Video Conferencing Project</a></b> project
+            <b>Open Source Video Conferencing Project</a></b>
             <br/><br/>
             Author: Ankan Group</a>
         </div>

@@ -7,11 +7,11 @@
 */
 
 /**
- * MiroTalk P2P - Client component
+ * KMMEET P2P - Client component
  *
  * @link    https://videoconference.up.railway.app or https://videoconference.herokuapp.com
  * @license For open source use: AGPLv3
- *          For commercial use: https://github.com/miroslavpejic85/mirotalk#commercial-license-or-closed-source
+ *          For commercial use: https://github.com/miroslavpejic85/kmmeet#commercial-license-or-closed-source
  * @author  Ankan Ghosh and Ankan Pradhan - ankanpradhan275@gmail.com
  * @version 1.0.0
  *
@@ -39,7 +39,7 @@ const deleteImg = '../images/delete.png';
 const youtubeImg = '../images/youtube.png';
 const messageImg = '../images/message.png';
 const kickedOutImg = '../images/leave-room.png';
-const aboutImg = '../images/mirotalk-logo.png';
+const aboutImg = '../images/kmmeet-logo.png';
 // nice free icon: https://www.iconfinder.com
 
 const surveyActive = true; // when leaving the room give a feedback
@@ -82,8 +82,8 @@ let callStartTime;
 let callElapsedTime;
 let recStartTime;
 let recElapsedTime;
-let mirotalkTheme = 'dark'; // dark - grey ...
-let mirotalkBtnsBar = 'vertical'; // vertical - horizontal
+let kmmeetTheme = 'dark'; // dark - grey ...
+let kmmeetBtnsBar = 'vertical'; // vertical - horizontal
 let swalBackground = 'rgba(0, 0, 0, 0.7)'; // black - #16171b - transparent ...
 let peerGeo;
 let peerConnection;
@@ -338,9 +338,9 @@ function getHtmlElementsById() {
     videoQualitySelect = getId('videoQuality');
     videoFpsSelect = getId('videoFps');
     screenFpsSelect = getId('screenFps');
-    themeSelect = getId('mirotalkTheme');
+    themeSelect = getId('kmmeetTheme');
     videoObjFitSelect = getId('videoObjFitSelect');
-    btnsBarSelect = getId('mirotalkBtnsBar');
+    btnsBarSelect = getId('kmmeetBtnsBar');
     // my conference name, hand, video - audio status
     myVideoParagraph = getId('myVideoParagraph');
     myHandStatusIcon = getId('myHandStatusIcon');
@@ -592,7 +592,7 @@ function thereIsPeerConnections() {
  * On body load Get started
  */
 function initClientPeer() {
-    setTheme(mirotalkTheme);
+    setTheme(kmmeetTheme);
 
     if (!isWebRTCSupported) {
         userLog('error', 'This browser seems not supported WebRTC!');
@@ -679,7 +679,7 @@ function whoAreYou() {
         allowEscapeKey: false,
         background: swalBackground,
         position: 'center',
-        imageAlt: 'mirotalk-name',
+        imageAlt: 'kmmeet-name',
         imageUrl: welcomeImg,
         title: 'Enter your name',
         input: 'text',
@@ -769,7 +769,7 @@ function welcomeUser() {
         background: swalBackground,
         position: 'center',
         title: '<strong>Welcome ' + myPeerName + '</strong>',
-        imageAlt: 'mirotalk-welcome',
+        imageAlt: 'kmmeet-welcome',
         imageUrl: welcomeImg,
         html:
             `
@@ -795,7 +795,7 @@ function welcomeUser() {
         } else if (result.isDenied) {
             let message = {
                 email: '',
-                subject: 'Please join our MiroTalk Video Chat Meeting',
+                subject: 'Please join our KMMEET Video Chat Meeting',
                 body: 'Click to join: ' + myRoomUrl,
             };
             shareRoomByEmail(message);
@@ -913,7 +913,7 @@ function handleRTCDataChannels(peer_id) {
         console.log('handleRTCDataChannels ' + peer_id, event);
         event.channel.onmessage = (msg) => {
             switch (event.channel.label) {
-                case 'mirotalk_chat_channel':
+                case 'kmmeet_chat_channel':
                     try {
                         let dataMessage = JSON.parse(msg.data);
                         switch (dataMessage.type) {
@@ -931,7 +931,7 @@ function handleRTCDataChannels(peer_id) {
                         console.error('kmmeet_chat_channel', err);
                     }
                     break;
-                case 'mirotalk_file_sharing_channel':
+                case 'kmmeet_file_sharing_channel':
                     try {
                         let dataFile = msg.data;
                         handleDataChannelFileSharing(dataFile);
@@ -1099,14 +1099,14 @@ function handleRemovePeer(config) {
 }
 
 /**
- * Set mirotalk theme | dark | grey | ...
+ * Set kmmeet theme | dark | grey | ...
  * @param {*} theme
  */
 function setTheme(theme) {
     if (!theme) return;
 
-    mirotalkTheme = theme;
-    switch (mirotalkTheme) {
+    kmmeetTheme = theme;
+    switch (kmmeetTheme) {
         case 'dark':
             // dark theme
             swalBackground = 'radial-gradient(#393939, #000000)';
@@ -1136,7 +1136,7 @@ function setTheme(theme) {
             console.log('No theme found');
     }
 
-    setButtonsBarPosition(mirotalkBtnsBar);
+    setButtonsBarPosition(kmmeetBtnsBar);
 }
 
 /**
@@ -1146,8 +1146,8 @@ function setTheme(theme) {
 function setButtonsBarPosition(position) {
     if (!position || isMobileDevice) return;
 
-    mirotalkBtnsBar = position;
-    switch (mirotalkBtnsBar) {
+    kmmeetBtnsBar = position;
+    switch (kmmeetBtnsBar) {
         case 'vertical':
             document.documentElement.style.setProperty('--btns-top', '50%');
             document.documentElement.style.setProperty('--btns-right', '0px');
@@ -2716,7 +2716,7 @@ async function shareRoomUrl() {
             background: swalBackground,
             position: 'center',
             title: 'Share Room',
-            // imageAlt: 'mirotalk-share',
+            // imageAlt: 'kmmeet-share',
             // imageUrl: shareUrlImg,
             html:
                 `
@@ -2746,7 +2746,7 @@ async function shareRoomUrl() {
             } else if (result.isDenied) {
                 let message = {
                     email: '',
-                    subject: 'Please join our MiroTalk Video Chat Meeting',
+                    subject: 'Please join our KMMEET Video Chat Meeting',
                     body: 'Click to join: ' + myRoomUrl,
                 };
                 shareRoomByEmail(message);
@@ -3249,7 +3249,7 @@ function downloadRecordedStream() {
  * @param {*} peer_id
  */
 function createChatDataChannel(peer_id) {
-    chatDataChannels[peer_id] = peerConnections[peer_id].createDataChannel('mirotalk_chat_channel');
+    chatDataChannels[peer_id] = peerConnections[peer_id].createDataChannel('kmmeet_chat_channel');
     chatDataChannels[peer_id].onopen = (event) => {
         console.log('chatDataChannels created', event);
     };
@@ -4764,7 +4764,7 @@ function handleWhiteboardAction(config, logme = true) {
  * @param {*} peer_id
  */
 function createFileSharingDataChannel(peer_id) {
-    fileDataChannels[peer_id] = peerConnections[peer_id].createDataChannel('mirotalk_file_sharing_channel');
+    fileDataChannels[peer_id] = peerConnections[peer_id].createDataChannel('kmmeet_file_sharing_channel');
     fileDataChannels[peer_id].binaryType = 'arraybuffer';
     fileDataChannels[peer_id].onopen = (event) => {
         console.log('fileDataChannels created', event);
@@ -4898,7 +4898,7 @@ function selectFileToShare() {
     Swal.fire({
         allowOutsideClick: false,
         background: swalBackground,
-        imageAlt: 'mirotalk-file-sharing',
+        imageAlt: 'kmmeet-file-sharing',
         imageUrl: fileSharingImg,
         position: 'center',
         title: 'Share file',
@@ -4999,7 +4999,7 @@ function endDownload() {
                 title: 'Received file',
                 text: incomingFileInfo.fileName + ' size ' + bytesToSize(incomingFileInfo.fileSize),
                 imageUrl: e.target.result,
-                imageAlt: 'mirotalk-file-img-download',
+                imageAlt: 'kmmeet-file-img-download',
                 showDenyButton: true,
                 confirmButtonText: `Save`,
                 denyButtonText: `Cancel`,
@@ -5020,7 +5020,7 @@ function endDownload() {
         Swal.fire({
             allowOutsideClick: false,
             background: swalBackground,
-            imageAlt: 'mirotalk-file-download',
+            imageAlt: 'kmmeet-file-download',
             imageUrl: fileSharingImg,
             position: 'center',
             title: 'Received file',
@@ -5272,7 +5272,7 @@ function handleKickedOut(config) {
 }
 
 /**
- * MiroTalk about info
+ * KMMEET about info
  */
 function showAbout() {
     playSound('newMessage');
@@ -5281,7 +5281,7 @@ function showAbout() {
         background: swalBackground,
         position: 'center',
         title: '<strong>KMMEET</strong>',
-        imageAlt: 'mirotalk-about',
+        imageAlt: 'kmmeet-about',
         imageUrl: aboutImg,
         html: `
         <br/>
@@ -5309,7 +5309,7 @@ function leaveRoom() {
     Swal.fire({
         background: swalBackground,
         position: 'center',
-        imageAlt: 'mirotalk-leave',
+        imageAlt: 'kmmeet-leave',
         imageUrl: leaveRoomImg,
         title: 'Do you want to leave this room?',
         showDenyButton: true,

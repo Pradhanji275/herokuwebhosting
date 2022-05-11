@@ -1,12 +1,12 @@
 <?php
 
 $API_KEY = "videoconference_default_secret";
-// $MIROTALK_URL = "http://localhost:3000/api/v1/meeting";
-// $MIROTALK_URL = "https://mirotalk.herokuapp.com/api/v1/meeting";
-$MIROTALK_URL = "https://videoconference.up.railway.app/api/v1/meeting";
+// $KMMEET_URL = "http://localhost:3000/api/v1/meeting";
+// $KMMEET_URL = "https://mirotalk.herokuapp.com/api/v1/meeting";
+$KMMEET_URL = "https://videoconference.up.railway.app/api/v1/meeting";
 
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $MIROTALK_URL);
+curl_setopt($ch, CURLOPT_URL, $KMMEET_URL);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 

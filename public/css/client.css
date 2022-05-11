@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa:wght@500&display=swap');
-
+@import url("https://fonts.googleapis.com/css?family=Comfortaa:wght@500&display=swap");
 /*--------------------------------------------------------------
 # Fade in page on load 
 --------------------------------------------------------------*/
@@ -36,43 +36,33 @@
 --------------------------------------------------------------*/
 
 :root {
-    /* common */
-    --status-menu-bg: linear-gradient(#968f8f, #000000);
-    --body-bg: radial-gradient(#b1aaaa, #000000);
-    --border: 1px solid rgba(190, 180, 180, 0.32);
-
-    --msger-top: 50%;
-    --msger-left: 50%;
-    --msger-height: 680px;
-    --msger-width: 420px;
-
-    /* video iframe */
-    --iframe-width: 640px;
-    --iframe-height: 480px;
-
-    /* whiteboard resize */
-    --wb-width: 800px;
-    --wb-height: 600px;
-
-    /* my settings */
-    --mySettings-select-w: 100%;
-
-    /* btns hover scale 110% zoom */
-    --btns-hover-scale: scale(1.1);
-    --hover-color: grey;
-
-    /* video elem border color */
-    --elem-border-color: none;
-
-    /* left buttons bar vertical default */
-    --btns-top: 50%;
-    --btns-right: 0%;
-    --btns-left: 15px;
-    --btns-margin-left: 0px;
-    --btns-width: 40px;
-    --btns-flex-direction: column;
-
-    /* left buttons bar horizontal
+     /* common */
+  --bg: linear-gradient(to left, #363434, #000000);
+  --msger-top: 50%;
+  --msger-left: 50%;
+  --msger-height: 680px;
+  --msger-width: 420px;
+  /* video iframe */
+  --iframe-width: 640px;
+  --iframe-height: 480px;
+  /* whiteboard resize */
+  --wb-width: 800px;
+  --wb-height: 600px;
+  --wb-bg: linear-gradient(to left, #1f1e1e, #000000);
+  /* my settings */
+  --mySettings-select-w: 100%;
+  /* btns hover scale 110% zoom */
+  --btns-hover-scale: scale(1.1);
+  /* video elem border color */
+  --elem-border-color: rgb(229, 245, 8) 1px solid;
+  /* left buttons bar vertical default */
+  --btns-top: 50%;
+  --btns-right: 0%;
+  --btns-left: 20px;
+  --btns-margin-left: 0px;
+  --btns-width: 40px;
+  --btns-flex-direction: column;
+  /* left buttons bar horizontal
     --btns-top: 95%;
     --btns-right: 25%;
     --btns-left: 50%;
@@ -80,32 +70,91 @@
     --btns-width: 600px;
     --btns-flex-direction: row;
     */
-
-    /* dark theme */
-    --body-bg: radial-gradient(#393939, #000000);
-    --msger-bg: radial-gradient(#393939, #000000);
-    --msger-private-bg: radial-gradient(#393939, #000000);
-    --wb-bg: radial-gradient(#393939, #000000);
-    --box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-
-    /* chat msg boble */
+  /* neon theme default */
+  --body-bg: black;
+  --msger-bg: linear-gradient(to left, #383838, #000000);
+  --msger-private-bg: black;
+  --left-msg-bg: #da05f3;
+  --private-msg-bg: #f77070;
+  --right-msg-bg: #579ffb;
+  --box-shadow: 3px 3px 6px #0500ff, -3px -3px 6px #da05f3;
+  --btn-bg: white;
+  --btn-color: black;
+  --btn-opc: 1;
+  --wb-bg: linear-gradient(to left, #1f1e1e, #000000);
+  --wb-hbg: #000000;
+  --my-settings-label-color: white;
+  --hover-color: rgb(0, 162, 255);
+  /* rgb(8, 189, 89); */
+  /* dark theme
+    --body-bg: #16171b;
+    --msger-bg: linear-gradient(to left, #383838, #000000);
+    --msger-private-bg: black;
     --left-msg-bg: #222328;
-    --private-msg-bg: #0fe945;
+    --private-msg-bg: #f77070;
     --right-msg-bg: #0a0b0c;
-
-    /* volume detected */
-    --volume-up: 0px 8px 16px 0px rgb(249, 253, 0);
-
-    /* 
-        https://developer.mozilla.org/it/docs/Web/CSS/object-fit 
+    --box-shadow: 3px 3px 6px #0a0b0c, -3px -3px 6px #222328; 
+  --box-shadow: 3px 3px 6px #0a0b0c, -3px -3px 6px #222328; 
+    --box-shadow: 3px 3px 6px #0a0b0c, -3px -3px 6px #222328; 
+    --btn-bg: white;
+    --btn-color: black;
+    --btn-opc: 1;
+    --wb-bg: linear-gradient(to left, #1f1e1e, #000000);
+    --wb-hbg: #000000;
+    --my-settings-label-color: white;
     */
-    --video-object-fit: cover;
+  /* forest theme
+    --body-bg: black;
+    --msger-bg: linear-gradient(to left, #383838, #000000);
+    --msger-private-bg: black;
+    --left-msg-bg: #2e3500;
+    --private-msg-bg: #f77070;
+    --right-msg-bg: #004b1c;
+    --box-shadow: 3px 3px 6px #27944f, -3px -3px 6px #14843d;
+    --btn-bg: white;
+    --btn-color: black;
+    --btn-opc: 1;
+    --wb-bg: linear-gradient(to left, #1f1e1e, #000000);
+    --wb-hbg: #000000;
+    --my-settings-label-color: white;
+    */
+  /* sky theme
+    --body-bg: black;
+    --msger-bg: linear-gradient(to left, #383838, #000000);
+    --msger-private-bg: black;
+    --left-msg-bg: #0c95b7;
+    --private-msg-bg: #f77070;
+    --right-msg-bg: #012a5f;
+    --box-shadow: 3px 3px 6px #03a5ce, -3px -3px 6px #03a5ce;
+    --btn-bg: white;
+    --btn-color: black;
+    --btn-opc: 1;
+    --wb-bg: linear-gradient(to left, #1f1e1e, #000000);
+    --wb-hbg: #000000;
+    --my-settings-label-color: white;
+    */
+  /* ghost theme
+    --body-bg: black;
+    --msger-bg: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.7));
+    --msger-private-bg: black;
+    --left-msg-bg: rgba(0, 0, 0, 0.7);
+    --private-msg-bg: rgba(252, 110, 110, 0.7);
+    --right-msg-bg: rgba(0, 0, 0, 0.7);
+    --box-shadow: "0px"; 
+  --box-shadow: "0px"; 
+    --box-shadow: "0px"; 
+    --btn-bg: white;
+    --btn-color: black;
+    --btn-opc: 0.7;
+    --wb-bg: transparent;
+    --wb-hbg: #000000;
+    --my-settings-label-color: white;
+    */
+  /* https://developer.mozilla.org/it/docs/Web/CSS/object-fit */
+  --video-object-fit: cover;
 }
 
-* {
-    outline: none;
-    font-family: 'Comfortaa';
-}
+
 
 /*--------------------------------------------------------------
 # Body Html setup
@@ -117,6 +166,33 @@ body {
     height: 100%;
     overflow: hidden;
     background: var(--body-bg);
+}
+/*--------------------------------------------------------------
+# Body setup
+--------------------------------------------------------------*/
+
+body {
+  background: var(--body-bg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  opacity: 0;
+  /* make things invisible upon start */
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 0.3s;
+  -moz-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+  overflow: hidden;
 }
 
 /*--------------------------------------------------------------
@@ -137,79 +213,185 @@ body {
     padding: 5px;
     font-family: 'Comfortaa';
 }
+/*--------------------------------------------------------------
+# Pulse class effect
+--------------------------------------------------------------*/
+
+.pulsate {
+  animation: pulsate 3s ease-out;
+  animation-iteration-count: infinite;
+  -webkit-animation: pulsate 3s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  opacity: 0.5;
+}
+
+@-webkit-keyframes pulsate {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulsate {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@-webkit-keyframes pulsate {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
 
 /*--------------------------------------------------------------
 # Left buttons
 --------------------------------------------------------------*/
 
 #buttonsBar {
-    z-index: 12;
-    display: none;
-    position: fixed;
-    padding: 5px;
-
-    top: var(--btns-top);
-    right: var(--btns-right);
-    left: var(--btns-left);
-    margin-left: var(--btns-margin-left);
-    width: var(--btns-width);
-    flex-direction: var(--btns-flex-direction);
-
-    justify-content: space-around;
-    grid-gap: 0.4rem;
-
-    -webkit-transform: translate(0%, -50%);
-    -ms-transform: translate(0%, -50%);
-    transform: translate(0%, -50%);
-
-    /* background: var(--body-bg); */
-    box-shadow: 0px 8px 16px 0px rgb(33 33 33);
-    border: var(--border);
-    border-radius: 10px;
-    overflow: hidden;
+  z-index: 12;
+  display: none;
+  position: absolute;
+  padding: 15px;
+  top: var(--btns-top);
+  right: var(--btns-right);
+  left: var(--btns-left);
+  margin-left: var(--btns-margin-left);
+  width: var(--btns-width);
+  flex-direction: var(--btns-flex-direction);
+  justify-content: space-around;
+  grid-gap: 0.4rem;
+  -webkit-transform: translate(0%, -50%);
+  -ms-transform: translate(0%, -50%);
+  transform: translate(0%, -50%);
+  border-radius: 20px;
+  border-color: #9ecaed;
+  box-shadow: 0 0 10px #9ecaed;
+  background: transparent;
+  overflow: hidden;
 }
 
 #buttonsBar button {
-    border: none;
-    font-size: 1.5rem;
-    transition: all 0.3s ease-in-out;
-    background: #fff;
-    padding: 4px;
-    border-radius: 5px;
-    color: #000;
+  border: none;
+  font-size: 1.5rem;
+  transition: all 0.3s ease-in-out;
+  background: var(--btn-bg);
+  padding: 4px;
+  border-radius: 5px;
+  opacity: var(--btn-opc);
+  color: var(--btn-color);
 }
 
 #buttonsBar button:hover {
-    color: var(--hover-color);
-    transform: var(--btns-hover-scale);
+  color: var(--hover-color);
+  transform: var(--btns-hover-scale);
 }
 
 #buttonsBar button:focus {
-    outline: none;
+  outline: none;
 }
 
 #initAudioBtn,
 #initVideoBtn {
-    border: none;
-    border-radius: 5px;
-    width: 40px;
-    background: white;
-    color: black;
-    font-size: 1.5rem;
-    padding: 4px;
-    transition: all 0.3s ease-in-out;
+  border: none;
+  border-radius: 5px;
+  width: 40px;
+  background: white;
+  color: black;
+  font-size: 1.5rem;
+  padding: 4px;
+  transition: all 0.3s ease-in-out;
 }
 
+#shareRoomBtn,
+#audioBtn,
+#videoBtn,
+#screenShareBtn,
+#recordStreamBtn,
+#fullScreenBtn,
+#swapCameraBtn,
+#chatRoomBtn,
+#myHandBtn,
+#whiteboardBtn,
+#fileShareBtn,
+#mySettingsBtn,
+#aboutBtn,
+#leaveRoomBtn {
+  color: var(--btn-color);
+}
+
+#initAudioBtn:hover,
+#initVideoBtn:hover,
+#shareRoomBtn:hover,
+#audioBtn:hover,
+#videoBtn:hover,
+#screenShareBtn:hover,
+#recordStreamBtn:hover,
+#fullScreenBtn:hover,
+#swapCameraBtn:hover,
+#chatRoomBtn:hover,
+#myHandBtn:hover,
+#fileShareBtn:hover,
+#whiteboardBtn:hover,
+#mySettingsBtn:hover,
+#aboutBtn:hover {
+  color: rgb(0, 162, 255);
+  transform: var(--btns-hover-scale);
+}
+#leaveRoomBtn:hover {
+  color: red;
+  transform: var(--btns-hover-scale);
+}
+
+button#myHandBtn {
+  color: #48ff00;
+}
+
+button#whiteboardCleanBtn {
+  color: #ff0000;
+}
+
+button#whiteboardSaveBtn {
+  color: #000000;
+}
+
+button#whiteboardEraserBtn {
+  color: #000000;
+}
+
+button#whiteboardCloseBtn {
+  color: #000000;
+}
+
+button#whiteboardFsBtn {
+  color: #000000;
+}
 #buttonsBar #leaveRoomBtn:hover {
-    color: #14e753;
-    transform: var(--btns-hover-scale);
+  color: red;
+  transform: var(--btns-hover-scale);
 }
 
 .fa-microphone-slash,
 .fa-video-slash {
-    color: #11db76 !important;
+  color: #e74c3c !important;
 }
-
 /*--------------------------------------------------------------
 # Chat room aka msger
 --------------------------------------------------------------*/
@@ -515,11 +697,11 @@ button:hover {
 }
 
 .msger-peer-inputarea * {
-    padding: 10px;
-    border: none;
-    border-radius: 3px;
-    font-size: 1em;
-    color: rgb(253, 251, 251);
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  font-size: 1em;
+  color: white;
 }
 
 /*--------------------------------------------------------------
@@ -535,6 +717,122 @@ emoji-picker {
     --background: #16171b;
     --num-columns: 8;
     --emoji-size: 1.5rem;
+}
+/*--------------------------------------------------------------
+# Video Grid
+--------------------------------------------------------------*/
+
+#myVideo.mirror {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: var(--video-object-fit);
+  cursor: pointer;
+}
+
+video:fullscreen {
+  object-fit: contain;
+  /* cover; */
+  border: var(--elem-border-color);
+}
+
+.video {
+  float: left;
+  width: 25vw;
+  height: 50vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.video.one {
+  width: 100vw;
+  height: 100vh;
+}
+
+.video.two {
+  width: 49.6vw;
+  height: 99vh;
+  --video-object-fit: cover;
+  border: var(--elem-border-color);
+  /* --video-object-fit: contain; */
+}
+
+.video.three {
+  /* width: 33vw;
+  height: 99vh; */
+  width: 49.6vw;
+  --video-object-fit: cover;
+  border: var(--elem-border-color);
+}
+
+.video.four {
+  width: 49.6vw;
+  height: 49vh;
+  --video-object-fit: cover;
+  border: var(--elem-border-color);
+}
+
+.video.five {
+  width: 33vw;
+  height: 49vh;
+  --video-object-fit: cover;
+  border: var(--elem-border-color);
+}
+
+.video.six {
+  width: 33vw;
+  height: 49vh;
+  --video-object-fit: cover;
+  border: var(--elem-border-color);
+}
+
+/*--------------------------------------------------------------
+# Handle video elements on screen resize
+--------------------------------------------------------------*/
+
+@media only screen and (max-width: 720px) {
+  /* 960px */
+  .video {
+    float: left;
+    width: 50vw;
+    height: 25vh;
+    overflow: hidden;
+  }
+  .video.two {
+    width: 99vw;
+    height: 49vh;
+    --video-object-fit: cover;
+    border: var(--elem-border-color);
+  }
+  .video.three {
+    width: 99vw;
+    height: 33vh;
+    --video-object-fit: cover;
+    border: var(--elem-border-color);
+  }
+  .video.four {
+    width: 49vw;
+    height: 49vh;
+    --video-object-fit: cover;
+    border: var(--elem-border-color);
+  }
+  .video.five {
+    width: 49vw;
+    height: 33vh;
+    --video-object-fit: cover;
+    border: var(--elem-border-color);
+  }
+  .video.six {
+    width: 49vw;
+    height: 33vh;
+    --video-object-fit: cover;
+    border: var(--elem-border-color);
+  }
 }
 
 /*--------------------------------------------------------------
@@ -553,17 +851,18 @@ emoji-picker {
 
 #mySettings {
     display: none;
-    z-index: 16;
-    min-width: 320px;
-    /* gui */
-    background: var(--body-bg);
-    border-radius: 5px;
-    margin: auto;
-    border: var(--border);
-    box-shadow: var(--box-shadow);
-    padding: 10px;
-    min-width: 330px;
-    overflow: hidden;
+  z-index: 16;
+  min-width: 320px;
+  /* gui */
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 5px;
+  border-color: #edf0f1;
+  box-shadow: 0 0 10px #9ecaed;
+  margin: auto;
+  padding: 10px;
+  min-width: 330px;
+  overflow: hidden;
+
 }
 
 #mySettingsHeader {
@@ -572,16 +871,16 @@ emoji-picker {
 
 #mySettings label {
     width: 7em;
-    display: flex;
-    color: #fff;
+  display: flex;
+  color: var(--my-settings-label-color);
 }
 
 #mySettings select {
     width: var(--mySettings-select-w);
-    height: 30px;
-    color: #fff;
-    background-color: #0a0a0a;
-    border-radius: 5px;
+  height: 30px;
+  color: white;
+  background-color: #2b2b2b;
+  border-radius: 5px;
 }
 
 #mySettingsCloseBtn {
@@ -599,9 +898,9 @@ emoji-picker {
 }
 
 #myPeerNameSet {
-    border: 1px solid #fff;
-    color: #fff;
-    background-color: #111010;
+   border: 1px solid white;
+  color: white;
+  background-color: #2b2b2b;
 }
 
 #myPeerNameSetBtn,
@@ -610,7 +909,6 @@ emoji-picker {
 #lockUnlockRoomBtn,
 #speechRecognitionStart,
 #speechRecognitionStop {
-    font-size: 0.9rem;
     padding: 5px;
     border-radius: 5px;
     color: #fff;
@@ -636,21 +934,23 @@ emoji-picker {
 /* Style the tab */
 
 .tab {
-    overflow: hidden;
-    background-color: rgb(6, 54, 10);
+   overflow: hidden;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0);
 }
 
 /* Style the buttons inside the tab */
 
 .tab button {
     background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    color: rgb(61, 151, 19);
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  color: white;
+}
 }
 
 /* Change background color of buttons on hover */
@@ -664,15 +964,16 @@ emoji-picker {
 /* Create an active/current tablink class */
 
 .tab button.active {
-    background-color: rgb(66, 11, 11);
+    background-color: rgb(30 29 29);
 }
 
 /* Style the tab content */
 
 .tabcontent {
     display: none;
-    padding: 6px 12px;
-    border-top: none;
+  padding: 6px 12px;
+  border: 1px solid rgb(0, 0, 0);
+  border-top: none;
 }
 
 /* on open display devices tab */
@@ -761,7 +1062,73 @@ emoji-picker {
         opacity: 0.5;
     }
 }
+/*--------------------------------------------------------------
+# Status menù (time-name-audio-video)
+--------------------------------------------------------------*/
 
+.statusMenu {
+  z-index: 7;
+  display: none;
+  position: absolute;
+  padding: 10px;
+  background: var(--bg);
+  font-size: small;
+  /* 4 mobile */
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  cursor: default;
+  /* center */
+  top: 18px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.statusMenu i,
+.statusMenu p,
+.statusMenu h4 {
+  color: white;
+  display: inline;
+  border: none;
+  margin-right: 10px;
+}
+.statusMenu button {
+  float: right;
+  margin-right: 3px;
+  color: white;
+  background: transparent;
+  display: inline;
+  border: none;
+}
+.statusMenu p:hover,
+.statusMenu h4:hover,
+.statusMenu button:hover {
+  color: rgb(0, 102, 255);
+  transition: all 0.3s ease-in-out;
+}
+/*--------------------------------------------------------------
+# Avatar Image on video OFF
+--------------------------------------------------------------*/
+
+button#counttimebuttonatpalette {
+  font-size: 16px;
+  color: #ff914d;
+  font-weight: 900;
+  font-family: "Comfortaa", cursive;
+}
+
+.videoAvatarImage {
+  z-index: 8;
+  display: none;
+  position: absolute;
+  /*center*/
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 /*--------------------------------------------------------------
 # Send File
 --------------------------------------------------------------*/
@@ -769,16 +1136,17 @@ emoji-picker {
 #sendFileDiv,
 #receiveFileDiv {
     z-index: 17;
-    display: none;
-    min-width: 320px;
-    border-radius: 5px;
-    margin: auto;
-    padding: 10px;
-    color: #fff;
-    font-size: 1rem;
-    background: var(--body-bg);
-    box-shadow: var(--box-shadow);
-    overflow: hidden;
+  display: none;
+  min-width: 320px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 5px;
+  margin: auto;
+  box-shadow: var(--box-shadow);
+  padding: 10px;
+  color: white;
+  font-size: 1rem;
+  overflow: hidden;
+    
 }
 
 #sendAbortBtn,
@@ -822,25 +1190,25 @@ progress {
 }
 
 #videoUrlHeader {
-    position: absolute;
-    display: flex;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    cursor: move;
-    border-radius: 5px;
-    background-color: rgba(128, 25, 25, 0.7);
+     position: absolute;
+  display: flex;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  cursor: move;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 #videoUrlHeader button {
-    height: 30px;
-    width: 30px;
-    font-size: 1.2rem;
-    margin-top: 10px;
-    margin-left: 10px;
-    border: none;
-    color: #fff;
-    background: rgb(94, 18, 18);
+   height: 30px;
+  width: 30px;
+  font-size: 1.2rem;
+  margin-top: 10px;
+  margin-left: 10px;
+  border: none;
+  color: white;
+  background: black;
 }
 
 #videoUrlHeader button:hover {
@@ -1007,3 +1375,20 @@ z-index
 16 settings
 17 send File Div
 */
+button.swal2-confirm.swal2-styled {
+  color: #2d4134;
+  background: #00ccff;
+  /*background: #ff914d;*/
+}
+
+button.swal2-deny.swal2-styled {
+  color: #3700ff;
+  background: #1eff00;
+  /*background: #ff914d;*/
+}
+
+button.swal2-cancel.swal2-styled {
+  color: #ffffff;
+  background: #444141;
+  /*background: #ff914d;*/
+}

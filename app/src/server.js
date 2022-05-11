@@ -23,9 +23,9 @@ dependencies: {
 /**
  * KMMEET P2P - Server component
  *
- * @link    https://mirotalk.up.railway.app or https://projectkmmeet.herokuapp.com
+ * @link    https://kmmeet.up.railway.app or https://kmmeet.herokuapp.com
  * @license For open source use: AGPLv3
- *          For commercial use: https://github.com/miroslavpejic85/mirotalk#commercial-license-or-closed-source
+ *          For commercial use: https://github.com/miroslavpejic85/kmmeet#commercial-license-or-closed-source
  * @author  Miroslav Pejic - miroslav.pejic.85@gmail.com
  * @version 1.0.0
  *
@@ -83,7 +83,7 @@ const swaggerDocument = yamlJS.load(path.join(__dirname + '/../api/swagger.yaml'
 const { v4: uuidV4 } = require('uuid');
 const apiBasePath = '/api/v1'; // api endpoint path
 const api_docs = host + apiBasePath + '/docs'; // api docs
-const api_key_secret = process.env.API_KEY_SECRET || 'mirotalk_default_secret';
+const api_key_secret = process.env.API_KEY_SECRET || 'kmmeet_default_secret';
 
 // Ngrok config
 const ngrok = require('ngrok');
@@ -143,7 +143,7 @@ app.get(['/'], (req, res) => {
     res.sendFile(view.landing);
 });
 
-// mirotalk about
+// kmmeet about
 app.get(['/about'], (req, res) => {
     res.sendFile(view.about);
 });
@@ -168,9 +168,9 @@ app.get('/join/', (req, res) => {
     if (Object.keys(req.query).length > 0) {
         log.debug('Request Query', req.query);
         /* 
-            http://localhost:3000/join?room=test&name=mirotalk&audio=1&video=1&notify=1
-            https://mirotalk.up.railway.app/join?room=test&name=mirotalk&audio=1&video=1&notify=1
-            https://mirotalk.herokuapp.com/join?room=test&name=mirotalk&audio=1&video=1&notify=1
+            http://localhost:3000/join?room=test&name=kmmeet&audio=1&video=1&notify=1
+            https://kmmeet.up.railway.app/join?room=test&name=kmmeet&audio=1&video=1&notify=1
+            https://kmmeet.herokuapp.com/join?room=test&name=kmmeet&audio=1&video=1&notify=1
         */
         let roomName = req.query.room;
         let peerName = req.query.name;
@@ -191,7 +191,7 @@ app.get('/join/*', (req, res) => {
 });
 
 /**
-    MiroTalk API v1
+    KMMEET API v1
     For api docs we use: https://swagger.io/
 */
 
@@ -203,7 +203,7 @@ app.post([apiBasePath + '/meeting'], (req, res) => {
     // check if user was authorized for the api call
     let authorization = req.headers.authorization;
     if (authorization != api_key_secret) {
-        log.debug('MiroTalk get meeting - Unauthorized', {
+        log.debug('KMMEET get meeting - Unauthorized', {
             header: req.headers,
             body: req.body,
         });
@@ -216,7 +216,7 @@ app.post([apiBasePath + '/meeting'], (req, res) => {
     res.end(JSON.stringify({ meeting: meetingURL }));
 
     // log.debug the output if all done
-    log.debug('MiroTalk get meeting - Authorized', {
+    log.debug('KMMEET get meeting - Authorized', {
         header: req.headers,
         body: req.body,
         meeting: meetingURL,
@@ -231,7 +231,7 @@ function getMeetingURL(host) {
     return 'http' + (host.includes('localhost') ? '' : 's') + '://' + host + '/join/' + uuidV4();
 }
 
-// end of MiroTalk API v1
+// end of KMMEET API v1
 
 // not match any of page before, so 404 not found
 app.get('*', function (req, res) {

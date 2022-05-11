@@ -1,6 +1,6 @@
 ---
 name: "\U0001F680 Feature request"
-about: Suggest a new feature to improve MiroTalk.
+about: Suggest a new feature to improve KMMEET.
 title: ''
 labels: ''
 assignees: ''

@@ -54,7 +54,7 @@
   /* btns hover scale 110% zoom */
   --btns-hover-scale: scale(1.1);
   /* video elem border color */
-  --elem-border-color: rgb(229, 245, 8) 1px solid;
+  --elem-border-color: rgb(252, 252, 252) 1px solid;
   /* left buttons bar vertical default */
   --btns-top: 50%;
   --btns-right: 0%;
@@ -71,8 +71,8 @@
     --btns-flex-direction: row;
     */
   /* neon theme default */
-  --body-bg: black;
-  --msger-bg: linear-gradient(to left, #383838, #000000);
+  --body-bg: rgb(17, 17, 17);
+  --msger-bg: linear-gradient(to left, #141414, #000000);
   --msger-private-bg: black;
   --left-msg-bg: #da05f3;
   --private-msg-bg: #f77070;
@@ -1253,8 +1253,8 @@ progress {
     width: 170px;
     height: 40px;
     font-size: 1.2rem;
-    background: linear-gradient(100deg, #376df9 0, #06d633 75%, #deec10 100%);
-    box-shadow: 0 0 6px 0 rgb(251 255 0 / 82%);
+    background: linear-gradient(100deg, #376df9 0, #06d633 75%, #fbfcf7 100%);
+    box-shadow: 0 0 6px 0 rgba(252, 252, 251, 0.82);
     color: #ffffff;
     transition: background 0.23s;
     cursor: pointer;

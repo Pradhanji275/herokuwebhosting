@@ -414,7 +414,7 @@ function setButtonsToolTip() {
     setTippy(leaveRoomBtn, 'LEAVE this room', 'right-start');
     // chat room buttons
     setTippy(msgerTheme, 'Ghost theme', 'top');
-    setTippy(msgerCPBtn, 'Private messages', 'top');
+    setTippy(msgerCPBtn, 'Direct messages', 'top');
     setTippy(msgerClean, 'Clean messages', 'top');
     setTippy(msgerSaveBtn, 'Save messages', 'top');
     setTippy(msgerClose, 'Close', 'top');
@@ -1448,7 +1448,7 @@ function loadRemoteMediaStream(stream, peers, peer_id) {
         setTippy(remoteVideoStatusIcon, 'Participant video is ON', 'bottom');
         setTippy(remoteAudioStatusIcon, 'Participant audio is ON', 'bottom');
         setTippy(remoteYoutubeBtnBtn, 'Send YouTube video', 'bottom');
-        setTippy(remotePrivateMsgBtn, 'Send private message', 'bottom');
+        setTippy(remotePrivateMsgBtn, 'Send direct message', 'bottom');
         setTippy(remoteVideoToImgBtn, 'Take a snapshot', 'bottom');
         setTippy(remotePeerKickOut, 'Kick out', 'bottom');
         setTippy(remoteVideoFullScreenBtn, 'Full screen mode', 'bottom');
@@ -3636,7 +3636,7 @@ function addMsgerPrivateBtn(msgerPrivateBtn, msgerPrivateMsgInput) {
         if (!pMsg) return;
         let toPeerName = msgerPrivateBtn.value;
         emitMsg(myPeerName, toPeerName, pMsg, true);
-        appendMessage(myPeerName, rightChatAvatar, 'right', pMsg + '<br/><hr>Private message to ' + toPeerName, true);
+        appendMessage(myPeerName, rightChatAvatar, 'right', pMsg + '<br/><hr>Direct message to ' + toPeerName, true);
         msgerPrivateMsgInput.value = '';
         msgerCP.style.display = 'none';
     }
@@ -3988,7 +3988,7 @@ function handlePeerPrivateMsg(peer_id, toPeerName) {
             background: swalBackground,
             position: 'center',
             imageUrl: messageImg,
-            title: 'Send private message',
+            title: 'Send direct message',
             input: 'text',
             showCancelButton: true,
             confirmButtonText: `Send`,
@@ -4006,7 +4006,7 @@ function handlePeerPrivateMsg(peer_id, toPeerName) {
                     myPeerName,
                     rightChatAvatar,
                     'right',
-                    pMsg + '<br/><hr>Private message to ' + toPeerName,
+                    pMsg + '<br/><hr>Direct message to ' + toPeerName,
                     true,
                 );
                 userLog('toast', 'Message sent to ' + toPeerName + ' 👍');

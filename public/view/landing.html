@@ -51,6 +51,42 @@
 
         <link rel="stylesheet" href="../css/landing.css" />
     </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  background-color: rgb(6, 12, 88);
+  font-family: cursive;
+}
+
+.glow {
+  font-size: 60px;
+  color: #fff;
+  text-align: left;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 
+    0 0 20px #fff,
+     0 0 30px #fff, 
+     0 0 40px #0b92ec, 
+     0 0 50px #0b92ec, 
+     0 0 60px #0b92ec, 
+     0 0 70px #0b92ec;
+  }
+  
+  to {
+    text-shadow: 0 0 20px #fff, 
+    0 0 30px #fff, 
+    0 0 40px #0b92ec, 
+    0 0 50px #0b92ec, 
+    0 0 60px #0b92ec, 
+    0 0 70px #0b92ec; 
+    0 0 80px  #0b92ec;
+  }
+}
+</style>
     <body class="has-animations">
         <div class="body-wrap">
             <header class="site-header reveal-from-top">
@@ -71,9 +107,9 @@
                             <div class="split-wrap invert-mobile">
                                 <div class="split-item">
                                     <div class="hero-content split-item-content center-content-mobile">
-                                        <h1 class="mt-0 mb-16 reveal-from-bottom" data-reveal-delay="150">
-                                             <br><br><strong>KMMEET</strong><i><br/><br/>Straightforward <br />Quick Secure Free browser based Real-time Video Call Application.</i><br />
-                                        </h1>
+                                        <h2 class="mt-0 mb-16 reveal-from-bottom" data-reveal-delay="150">
+                                             <br><br><strong><h1 class="glow">KMMEET</h1></strong><i><br/><br/>Straightforward <br />Quick Secure Free browser based Real-time Video Call Application.</i><br />
+                                        </h2>
                                         <p class="mt-0 mb-32 reveal-from-bottom" data-reveal-delay="300">
                                             Start your next video call with a single click. No download, plug-in, or
                                             login is required. Just get straight to the conference room.
@@ -108,9 +144,9 @@
                         <div class="features-tiles-inner section-inner has-top-divider">
                             <div class="section-header">
                                 <div class="container-xs reveal-from-bottom" data-reveal-delay="650">
-                                    <h2 class="mt-0 mb-16">
+                                    <h3 class="mt-0 mb-16">
                                         Unlimited Number of conference rooms Without Call Time Limitation
-                                    </h2>
+                                    </h3>
                                     <p class="m-0">
                                         KMMEET is built radically differently. We left behind slow bulky servers,
                                         opting for peer-to-peer calling. We engineered a platform with maximum video
@@ -120,9 +156,9 @@
                             </div>
                             <div class="container">
                             <div class="section-header">
-                                    <h2 class="mt-0 mb-16">
+                                    <h3 class="mt-0 mb-16">
                                         Know Various Features
-                                    </h2>
+                                    </h3>
                                 </div>
                             </div>
                             <div class="container">
@@ -312,13 +348,14 @@
                         <div class="section-inner has-top-divider">
                             <div class="container-xs">
                                 <div class="section-header center-content">
-                                    <h2 class="m-0">Try an easier, more secure way of conferencing in Your Browser.</h2>
+                                    <h3 class="m-0">Try an easier, more secure way of conferencing in Your Browser.</h3>
                                     <div class="container">
                                 <br>
                             <div class="section-header center-content reveal-from-bottom">
                                 <div class="container-xs">
                                 </div>
-                                <h2 class="mt-0 mb-16">Browsers In Support</br></h2>
+                                </div>
+                                <h3 class="mt-0 mb-16">Browsers In Support</br></h3>
                             <div class="tiles-wrap">
                                 <div class="tiles-item reveal-from-bottom">
                                     <div class="tiles-item-inner">
@@ -330,10 +367,18 @@
                                                     width="auto"
                                                     height="auto"
                                                 />
+                                                    </div>
+                                                    </div>
                                         <div class="team-item-content">
                                             <h5 class="team-item-name mt-0 mb-4">
                                                 Chrome, Edge, Firefox, Opera, Safari, Brave and more.
                                             </h5>
+                                                    </div>
+                                                    </div>
+                                            </div>
+                                            </div>
+                                    </div>
+                                    </div>
                                 <div class="center-content">
                                     <br>
                                     <a
@@ -344,7 +389,6 @@
                                         "href="/newcall">Try now</br></a></a>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </section>
             </main>

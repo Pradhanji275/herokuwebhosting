@@ -284,7 +284,7 @@ body {
   transform: translate(0%, -50%);
   border-radius: 20px;
   border-color: #9ecaed;
-  box-shadow: 0 0 10px #9ecaed;
+  box-shadow: 0 0 30px #9ecaed;
   background: transparent;
   overflow: hidden;
 }
@@ -858,7 +858,7 @@ video:fullscreen {
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 5px;
   border-color: #edf0f1;
-  box-shadow: 0 0 10px #9ecaed;
+  box-shadow: 0 0 40px #9ecaed;
   margin: auto;
   padding: 10px;
   min-width: 330px;

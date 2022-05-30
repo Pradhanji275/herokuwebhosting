@@ -174,7 +174,6 @@ body {
 body {
   background: var(--body-bg);
   background-repeat: no-repeat;
-  background-image: url("../images/7.webp");
   background-attachment: fixed;
   background-position: center;
   margin: 0;

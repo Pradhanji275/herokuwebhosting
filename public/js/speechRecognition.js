@@ -40,6 +40,7 @@ const langs = [
         ['es-UY', 'Uruguay'],
         ['es-VE', 'Venezuela'],
     ],
+    ['ˈjərmən', ['gr-GR']],
     ['Euskara', ['eu-ES']],
     ['Français', ['fr-FR']],
     ['Galego', ['gl-ES']],

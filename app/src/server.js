@@ -23,9 +23,9 @@ dependencies: {
 /**
  * KMMEET P2P - Server component
  *
- * @link    https://kmmeet.up.railway.app or https://kmmeet.herokuapp.com
+ * @link    https://kmmeet.herokuapp.com
  * @license For open source use: AGPLv3
- *          For commercial use: https://github.com/miroslavpejic85/kmmeet#commercial-license-or-closed-source
+ *          For commercial use: kmmeet#commercial-license-or-closed-source
  * @author  Ankan Group - ankanpradhan275@gmail.com
  * @version 1.0.0
  *

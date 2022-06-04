@@ -11,7 +11,7 @@
  *
  * @link    https://videoconference.up.railway.app or https://videoconference.herokuapp.com
  * @license For open source use: AGPLv3
- *          For commercial use: https://github.com/miroslavpejic85/kmmeet#commercial-license-or-closed-source
+ *          For commercial use: kmmeet#commercial-license-or-closed-source
  * @author  Ankan Ghosh and Ankan Pradhan - ankanpradhan275@gmail.com
  * @version 1.0.0
  *

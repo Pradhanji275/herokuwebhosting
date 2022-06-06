@@ -1,7 +1,7 @@
 {
     "name": "kmmeet",
     "version": "1.0.0",
-    "description": "A free WebRTC browser-based video call",
+    "description": "A free WebRTC browser-based video conference",
     "main": "server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",

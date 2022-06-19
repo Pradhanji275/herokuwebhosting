@@ -2,9 +2,7 @@ const fetch = require('node-fetch');
 
 const API_KEY = 'videoconference_default_secret';
 // const KMMEET_URL = "http://localhost:3000/api/v1/meeting";
-// const KMMEET_URL = "https://mirotalk.herokuapp.com/api/v1/meeting";
-const KMMEET_URL = 'https://kmmeetvideoconference.up.railway.app/api/v1/meeting';
-
+const KMMEET_URL = "https://kmmeet.herokuapp.com/api/v1/meeting";
 function getResponse() {
     return fetch(KMMEET_URL, {
         method: 'POST',

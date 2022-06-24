@@ -5629,20 +5629,18 @@ function handleKickedOut(config) {
 function showAbout() {
     playSound('newMessage');
 
-    Swal.fire({
+   Swal.fire({
         background: swalBackground,
         position: 'center',
-        title: '<strong>WebRTC P2P</strong>',
+        title: '<strong>KMMEET</strong>',
         imageAlt: 'kmmeet-about',
         imageUrl: aboutImg,
         html: `
         <br/>
         <div id="about">
-            <b><a href="https://github.com/miroslavpejic85/kmmeet" target="_blank">Open Source</a></b> project
+            <b>Open Source Video Conferencing Project</a></b>
             <br/><br/>
-            <button class="pulsate" onclick="window.open('https://github.com/sponsors/miroslavpejic85?o=esb')"><i class="fas fa-heart" ></i>&nbsp;Sponsor</button>
-            <br /><br />
-            Author:<a href="https://www.linkedin.com/in/miroslav-pejic-976a07101/" target="_blank"> Miroslav Pejic</a>
+            Author: Ankan Group</a>
         </div>
         `,
         showClass: {

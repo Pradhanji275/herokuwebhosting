@@ -9,10 +9,11 @@
 /**
  * KMMEET P2P - Client component
  *
- * @link    https://videoconference.up.railway.app or https://videoconference.herokuapp.com
+ * @link    GitHub: https://github.com/miroslavpejic85/kmmeet 
+ * @link    Live demo: https://p2p.kmmeet .org or https://kmmeet .up.railway.app or https://mirotalk.herokuapp.com
  * @license For open source use: AGPLv3
- *          For commercial use: kmmeet#commercial-license-or-closed-source
- * @author  Ankan Ghosh and Ankan Pradhan - ankanpradhan275@gmail.com
+ * @license For commercial or closed source, contact us at info.mirotalk@gmail.com
+ * @author  Miroslav Pejic - miroslav.pejic.85@gmail.com
  * @version 1.0.0
  *
  */
@@ -20,17 +21,16 @@
 'use strict'; // https://www.w3schools.com/js/js_strict.asp
 
 const isHttps = false; // must be the same on server.js
-const signalingServerPort = 3000; // must be the same to server.js PORT
 const signalingServer = getSignalingServer();
 const roomId = getRoomId();
 const peerInfo = getPeerInfo();
-const peerLoockupUrl = 'https://extreme-ip-lookup.com/json/?key=demo2';
+const peerLoockupUrl = 'https://extreme-ip-lookup.com/json/?key=demo2'; // get your API Key at https://extreme-ip-lookup.com
 const avatarApiUrl = 'https://eu.ui-avatars.com/api';
-const surveyURL = 'https://kmmeetvideoconference.herokuapp.com/';
+const surveyURL = 'https://www.questionpro.com/t/AUs7VZq00L';
 const welcomeImg = '../images/image-placeholder.png';
 const shareUrlImg = '../images/image-placeholder.png';
 const leaveRoomImg = '../images/leave-room.png';
-const confirmImg = '../images/bg.jpeg';
+const confirmImg = '../images/image-placeholder.png';
 const fileSharingImg = '../images/share.png';
 const roomLockedImg = '../images/locked.png';
 const camOffImg = '../images/cam-off.png';
@@ -51,8 +51,8 @@ const isMobileDevice = DetectRTC.isMobileDevice;
 const myBrowserName = DetectRTC.browser.name;
 
 const wbImageInput = 'image/*';
-const wbWidth = 800;
-const wbHeight = 600;
+const wbWidth = 1366;
+const wbHeight = 768;
 
 const chatInputEmoji = {
     '<3': '\u2764\uFE0F',
@@ -66,6 +66,8 @@ const chatInputEmoji = {
     ":'(": '\uD83D\uDE22',
     ':+1:': '\uD83D\uDC4D',
 }; // https://github.com/wooorm/gemoji/blob/main/support.md
+
+let thisRoomPassword = null;
 
 let myPeerId; // socket.id
 
@@ -88,6 +90,8 @@ let swalBackground = 'rgba(0, 0, 0, 0.7)'; // black - #16171b - transparent ...
 let peerGeo;
 let peerConnection;
 let myPeerName = getPeerName();
+let isScreenEnabled = getScreenEnabled();
+let isScreenSharingSupported = false;
 let notify = getNotify();
 let useAudio = true;
 let useVideo = true;
@@ -180,6 +184,7 @@ let tabDevicesBtn;
 let tabBandwidthBtn;
 let tabRoomBtn;
 let tabStylingBtn;
+let tabLanguagesBtn;
 let mySettingsCloseBtn;
 let myPeerNameSet;
 let myPeerNameSetBtn;
@@ -235,7 +240,8 @@ let wbPop = [];
 // room actions btns
 let muteEveryoneBtn;
 let hideEveryoneBtn;
-let lockUnlockRoomBtn;
+let lockRoomBtn;
+let unlockRoomBtn;
 // file transfer settings
 let fileToSend;
 let fileReader;
@@ -267,6 +273,22 @@ let videoUrlIframe;
 // speech recognition
 let speechRecognitionStart;
 let speechRecognitionStop;
+
+// show desired buttons
+const showShareRoomBtn = true;
+const showAudioBtn = true;
+const showVideoBtn = true;
+const showSwapCameraBtn = true;
+const showScreenShareBtn = true;
+const showRecordStreamBtn = true;
+const showFullScreenBtn = true;
+const showChatRoomBtn = true;
+const showCaptionBtn = true;
+const showMyHandBtn = true;
+const showWhiteboardBtn = true;
+const showFileShareBtn = true;
+const showMySettingsBtn = true;
+const showAboutBtn = true;
 
 /**
  * Load all Html elements by Id
@@ -329,6 +351,7 @@ function getHtmlElementsById() {
     tabBandwidthBtn = getId('tabBandwidthBtn');
     tabRoomBtn = getId('tabRoomBtn');
     tabStylingBtn = getId('tabStylingBtn');
+    tabLanguagesBtn = getId('tabLanguagesBtn');
     mySettingsCloseBtn = getId('mySettingsCloseBtn');
     myPeerNameSet = getId('myPeerNameSet');
     myPeerNameSetBtn = getId('myPeerNameSetBtn');
@@ -368,7 +391,8 @@ function getHtmlElementsById() {
     // room actions buttons
     muteEveryoneBtn = getId('muteEveryoneBtn');
     hideEveryoneBtn = getId('hideEveryoneBtn');
-    lockUnlockRoomBtn = getId('lockUnlockRoomBtn');
+    lockRoomBtn = getId('lockRoomBtn');
+    unlockRoomBtn = getId('unlockRoomBtn');
     // file send progress
     sendFileDiv = getId('sendFileDiv');
     sendFileInfo = getId('sendFileInfo');
@@ -398,32 +422,32 @@ function setButtonsToolTip() {
     // not need for mobile
     if (isMobileDevice) return;
     // main buttons
-    setTippy(shareRoomBtn, 'INVITE others to join', 'right-start');
-    setTippy(audioBtn, 'CLICK Audio OFF', 'right-start');
-    setTippy(videoBtn, 'CLICK Video OFF', 'right-start');
-    setTippy(screenShareBtn, 'START screen sharing', 'right-start');
-    setTippy(recordStreamBtn, 'START recording', 'right-start');
-    setTippy(fullScreenBtn, 'VIEW full screen', 'right-start');
-    setTippy(chatRoomBtn, 'OPEN the chat', 'right-start');
-    setTippy(captionBtn, 'OPEN the caption', 'right-start');
-    setTippy(myHandBtn, 'RAISE your hand', 'right-start');
-    setTippy(whiteboardBtn, 'OPEN the liveboard', 'right-start');
-    setTippy(fileShareBtn, 'SHARE file', 'right-start');
-    setTippy(mySettingsBtn, 'SHOW settings', 'right-start');
-    setTippy(aboutBtn, 'SHOW about', 'right-start');
-    setTippy(leaveRoomBtn, 'LEAVE this room', 'right-start');
+    setTippy(shareRoomBtn, 'Invite others to join', 'right-start');
+    setTippy(audioBtn, 'Stop the audio', 'right-start');
+    setTippy(videoBtn, 'Stop the video', 'right-start');
+    setTippy(screenShareBtn, 'Start screen sharing', 'right-start');
+    setTippy(recordStreamBtn, 'Start recording', 'right-start');
+    setTippy(fullScreenBtn, 'View full screen', 'right-start');
+    setTippy(chatRoomBtn, 'Open the chat', 'right-start');
+    setTippy(captionBtn, 'Open the caption', 'right-start');
+    setTippy(myHandBtn, 'Raise your hand', 'right-start');
+    setTippy(whiteboardBtn, 'Open the whiteboard', 'right-start');
+    setTippy(fileShareBtn, 'Share file', 'right-start');
+    setTippy(mySettingsBtn, 'Open settings', 'right-start');
+    setTippy(aboutBtn, 'Project info', 'right-start');
+    setTippy(leaveRoomBtn, 'Leave this room', 'right-start');
     // chat room buttons
     setTippy(msgerTheme, 'Ghost theme', 'top');
-    setTippy(msgerCPBtn, 'Direct messages', 'top');
-    setTippy(msgerClean, 'Clean messages', 'top');
-    setTippy(msgerSaveBtn, 'Save messages', 'top');
+    setTippy(msgerCPBtn, 'Private messages', 'top');
+    setTippy(msgerClean, 'Clean the messages', 'top');
+    setTippy(msgerSaveBtn, 'Save the messages', 'top');
     setTippy(msgerClose, 'Close', 'top');
     setTippy(msgerEmojiBtn, 'Emoji', 'top');
     setTippy(msgerSendBtn, 'Send', 'top');
     // caption buttons
     setTippy(captionTheme, 'Ghost theme', 'top');
-    setTippy(captionClean, 'Clean messages', 'top');
-    setTippy(captionSaveBtn, 'Save messages', 'top');
+    setTippy(captionClean, 'Clean the messages', 'top');
+    setTippy(captionSaveBtn, 'Save the messages', 'top');
     // settings
     setTippy(mySettingsCloseBtn, 'Close settings', 'top');
     setTippy(myPeerNameSetBtn, 'Change name', 'top');
@@ -432,39 +456,40 @@ function setButtonsToolTip() {
     setTippy(tabBandwidthBtn, 'Bandwidth', 'top');
     setTippy(tabRoomBtn, 'Room', 'top');
     setTippy(tabStylingBtn, 'Styling', 'top');
+    setTippy(tabLanguagesBtn, 'Languages', 'top');
     // whiteboard btns
-    setTippy(wbDrawingColorEl, 'DRAWING color', 'bottom');
-    setTippy(wbBackgroundColorEl, 'BACKGROUND color', 'bottom');
-    setTippy(whiteboardPencilBtn, 'DRAWING mode', 'bottom');
-    setTippy(whiteboardObjectBtn, 'OBJECT mode', 'bottom');
-    setTippy(whiteboardUndoBtn, 'UNDO the board', 'bottom');
-    setTippy(whiteboardRedoBtn, 'REDO the board', 'bottom');
-    setTippy(whiteboardImgFileBtn, 'ADD image from file', 'bottom');
-    setTippy(whiteboardImgUrlBtn, 'ADD image from URL', 'bottom');
-    setTippy(whiteboardTextBtn, 'ADD the text', 'bottom');
-    setTippy(whiteboardLineBtn, 'ADD the line', 'bottom');
-    setTippy(whiteboardRectBtn, 'ADD the rectangle', 'bottom');
-    setTippy(whiteboardCircleBtn, 'ADD the circle', 'bottom');
-    setTippy(whiteboardSaveBtn, 'SAVE the board', 'bottom');
-    setTippy(whiteboardEraserBtn, 'ERASE the object', 'bottom');
-    setTippy(whiteboardCleanBtn, 'CLEAN the board', 'bottom');
-    setTippy(whiteboardCloseBtn, 'CLOSE the board', 'bottom');
+    setTippy(wbDrawingColorEl, 'Drawing color', 'bottom');
+    setTippy(wbBackgroundColorEl, 'Background color', 'bottom');
+    setTippy(whiteboardPencilBtn, 'Drawing mode', 'bottom');
+    setTippy(whiteboardObjectBtn, 'Object mode', 'bottom');
+    setTippy(whiteboardUndoBtn, 'Undo', 'bottom');
+    setTippy(whiteboardRedoBtn, 'Redo', 'bottom');
+    setTippy(whiteboardImgFileBtn, 'Add image from file', 'bottom');
+    setTippy(whiteboardImgUrlBtn, 'Add image from URL', 'bottom');
+    setTippy(whiteboardTextBtn, 'Add the text', 'bottom');
+    setTippy(whiteboardLineBtn, 'Add the line', 'bottom');
+    setTippy(whiteboardRectBtn, 'Add the rectangle', 'bottom');
+    setTippy(whiteboardCircleBtn, 'Add the circle', 'bottom');
+    setTippy(whiteboardSaveBtn, 'Save the board', 'bottom');
+    setTippy(whiteboardEraserBtn, 'Erase the object', 'bottom');
+    setTippy(whiteboardCleanBtn, 'Clean the board', 'bottom');
+    setTippy(whiteboardCloseBtn, 'Close the board', 'bottom');
     // room actions btn
-    setTippy(muteEveryoneBtn, 'MUTE everyone except yourself', 'top');
-    setTippy(hideEveryoneBtn, 'HIDE everyone except yourself', 'top');
+    setTippy(muteEveryoneBtn, 'Mute everyone except yourself', 'top');
+    setTippy(hideEveryoneBtn, 'Hide everyone except yourself', 'top');
     // Suspend/Hide File transfer btn
-    setTippy(sendAbortBtn, 'ABORT file transfer', 'right-start');
-    setTippy(receiveHideBtn, 'HIDE file transfer', 'right-start');
+    setTippy(sendAbortBtn, 'Abort file transfer', 'right-start');
+    setTippy(receiveHideBtn, 'Hide file transfer', 'right-start');
     // video URL player
-    setTippy(videoUrlCloseBtn, 'Close the videoPlayer', 'right-start');
+    setTippy(videoUrlCloseBtn, 'Close the video player', 'right-start');
     setTippy(msgerVideoUrlBtn, 'Share YouTube video to all participants', 'right-start');
 }
 
 /**
  * Set nice tooltip to element
- * @param {*} elem
- * @param {*} content
- * @param {*} placement
+ * @param {object} elem element
+ * @param {string} content message to popup
+ * @param {string} placement position
  */
 function setTippy(elem, content, placement) {
     tippy(elem, {
@@ -476,7 +501,7 @@ function setTippy(elem, content, placement) {
 /**
  * Get peer info using DetecRTC
  * https://github.com/muaz-khan/DetectRTC
- * @returns Obj peer info
+ * @returns {object} peer info
  */
 function getPeerInfo() {
     return {
@@ -492,7 +517,7 @@ function getPeerInfo() {
 
 /**
  * Get approximative peer geolocation
- * @returns json
+ * Get your API Key at https://extreme-ip-lookup.com
  */
 function getPeerGeoLocation() {
     fetch(peerLoockupUrl)
@@ -500,30 +525,23 @@ function getPeerGeoLocation() {
         .then((outJson) => {
             peerGeo = outJson;
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.warn(err));
 }
 
 /**
  * Get Signaling server URL
- * @returns Signaling server URL
+ * @returns {string} Signaling server URL
  */
 function getSignalingServer() {
     if (isHttps) {
-        return 'https://' + location.hostname + ':' + signalingServerPort;
-        // if need: change it with YOUR-SERVER-DOMAIN-NAME
+        return 'https://' + location.hostname;
     }
-    return (
-        'http' +
-        (location.hostname == 'localhost' ? '' : 's') +
-        '://' +
-        location.hostname +
-        (location.hostname == 'localhost' ? ':' + signalingServerPort : '')
-    );
+    return 'http' + (location.hostname == 'localhost' ? '' : 's') + '://' + location.hostname;
 }
 
 /**
  * Generate random Room id if not set
- * @returns Room Id
+ * @returns {string} Room Id
  */
 function getRoomId() {
     // chek if passed as params /join?room=id
@@ -544,8 +562,8 @@ function getRoomId() {
 
 /**
  * Generate random Id
- * @param {*} length
- * @returns random id
+ * @param {integer} length
+ * @returns {string} random id
  */
 function makeId(length) {
     let result = '';
@@ -559,6 +577,7 @@ function makeId(length) {
 
 /**
  * Check if notify is set
+ * @returns {boolean} true/false (default true)
  */
 function getNotify() {
     let qs = new URLSearchParams(window.location.search);
@@ -572,7 +591,7 @@ function getNotify() {
 
 /**
  * Check if peer name is set
- * @returns Peer Name
+ * @returns {string} Peer Name
  */
 function getPeerName() {
     let qs = new URLSearchParams(window.location.search);
@@ -580,12 +599,35 @@ function getPeerName() {
 }
 
 /**
+ * Is screen enabled on join room
+ * @returns {boolean} true/false
+ */
+function getScreenEnabled() {
+    let qs = new URLSearchParams(window.location.search);
+    let screen = qs.get('screen');
+    if (screen) {
+        screen = screen.toLowerCase();
+        let queryPeerScreen = screen === '1' || screen === 'true';
+        return queryPeerScreen;
+    }
+    return false;
+}
+
+/**
  * Check if there is peer connections
- * @returns true, false otherwise
+ * @returns {boolean} true/false
  */
 function thereIsPeerConnections() {
     if (Object.keys(peerConnections).length === 0) return false;
     return true;
+}
+
+/**
+ * Count the peer connections
+ * @returns peer connections count
+ */
+function countPeerConnections() {
+    return Object.keys(peerConnections).length;
 }
 
 /**
@@ -600,13 +642,25 @@ function initClientPeer() {
     }
 
     console.log('Connecting to signaling server');
-    signalingSocket = io(signalingServer);
+
+    // Disable the HTTP long-polling transport
+    signalingSocket = io({ transports: ['websocket'] });
+
+    const transport = signalingSocket.io.engine.transport.name; // in most cases, "polling"
+    console.log('Connection transport', transport);
+
+    // Check upgrade transport
+    signalingSocket.io.engine.on('upgrade', () => {
+        const upgradedTransport = signalingSocket.io.engine.transport.name; // in most cases, "websocket"
+        console.log('Connection upgraded transport', upgradedTransport);
+    });
 
     // on receiving data from signaling server...
     signalingSocket.on('connect', handleConnect);
-    signalingSocket.on('roomIsLocked', handleRoomLocked);
-    signalingSocket.on('roomStatus', handleRoomStatus);
+    signalingSocket.on('roomIsLocked', handleUnlockTheRoom);
+    signalingSocket.on('roomAction', handleRoomAction);
     signalingSocket.on('addPeer', handleAddPeer);
+    signalingSocket.on('serverInfo', handleServerInfo);
     signalingSocket.on('sessionDescription', handleSessionDescription);
     signalingSocket.on('iceCandidate', handleIceCandidate);
     signalingSocket.on('peerName', handlePeerName);
@@ -624,8 +678,8 @@ function initClientPeer() {
 
 /**
  * Send async data to signaling server (server.js)
- * @param {*} msg msg to send to signaling server
- * @param {*} config JSON data to send to signaling server
+ * @param {string} msg msg to send to signaling server
+ * @param {object} config data to send to signaling server
  */
 async function sendToServer(msg, config = {}) {
     await signalingSocket.emit(msg, config);
@@ -633,7 +687,7 @@ async function sendToServer(msg, config = {}) {
 
 /**
  * Send async data through RTC Data Channels
- * @param {*} config obj data
+ * @param {object} config data
  */
 async function sendToDataChannel(config) {
     if (thereIsPeerConnections() && typeof config === 'object' && config !== null) {
@@ -662,13 +716,27 @@ function handleConnect() {
 }
 
 /**
+ * Handle some signaling server info
+ * @param {object} config data
+ */
+function handleServerInfo(config) {
+    let peers_count = config.peers_count;
+    console.log('Peers count', peers_count);
+    if (notify && peers_count == 1) {
+        welcomeUser();
+    } else {
+        checkShareScreen();
+    }
+}
+
+/**
  * set your name for the conference
  */
 function whoAreYou() {
     if (myPeerName) {
         checkPeerAudioVideo();
         whoAreYouJoin();
-        notify ? welcomeUser() : playSound('addPeer');
+        playSound('addPeer');
         return;
     }
 
@@ -701,7 +769,7 @@ function whoAreYou() {
             whoAreYouJoin();
         },
     }).then(() => {
-        notify ? welcomeUser() : playSound('addPeer');
+        playSound('addPeer');
     });
 
     if (isMobileDevice) return;
@@ -709,8 +777,8 @@ function whoAreYou() {
     initAudioBtn = getId('initAudioBtn');
     initVideoBtn = getId('initVideoBtn');
 
-    setTippy(initAudioBtn, 'Click Audio OFF', 'top');
-    setTippy(initVideoBtn, 'Click Video OFF', 'top');
+    setTippy(initAudioBtn, 'Stop the audio', 'top');
+    setTippy(initVideoBtn, 'Stop the video', 'top');
 }
 
 /**
@@ -719,13 +787,15 @@ function whoAreYou() {
  */
 function checkPeerAudioVideo() {
     let qs = new URLSearchParams(window.location.search);
-    let audio = qs.get('audio').toLowerCase();
-    let video = qs.get('video').toLowerCase();
+    let audio = qs.get('audio');
+    let video = qs.get('video');
     if (audio) {
+        audio = audio.toLowerCase();
         let queryPeerAudio = audio === '1' || audio === 'true';
         if (queryPeerAudio != null) handleAudio(audioBtn, false, queryPeerAudio);
     }
     if (video) {
+        video = video.toLowerCase();
         let queryPeerVideo = video === '1' || video === 'true';
         if (queryPeerVideo != null) handleVideo(videoBtn, false, queryPeerVideo);
     }
@@ -743,12 +813,13 @@ function whoAreYouJoin() {
 }
 
 /**
- * join to chennel and send some peer info
+ * join to channel and send some peer info
  */
 function joinToChannel() {
     console.log('join to channel', roomId);
     sendToServer('join', {
         channel: roomId,
+        channel_password: thisRoomPassword,
         peer_info: peerInfo,
         peer_geo: peerGeo,
         peer_name: myPeerName,
@@ -800,14 +871,15 @@ function welcomeUser() {
             };
             shareRoomByEmail(message);
         }
+        // share screen on join room
+        checkShareScreen();
     });
 }
 
 /**
  * When we join a group, our signaling server will send out 'addPeer' events to each pair of users in the group (creating a fully-connected graph of users,
  * ie if there are 6 people in the channel you will connect directly to the other 5, so there will be a total of 15 connections in the network).
- *
- * @param {*} config
+ * @param {object} config data
  */
 function handleAddPeer(config) {
     // console.log("addPeer", JSON.stringify(config));
@@ -837,14 +909,13 @@ function handleAddPeer(config) {
     handleAddTracks(peer_id);
     handleRTCDataChannels(peer_id);
     if (should_create_offer) handleRtcOffer(peer_id);
-
     wbUpdate();
-
     playSound('addPeer');
 }
 
 /**
  * Handle peers connection state
+ * @param {string} peer_id socket.id
  */
 function handlePeersConnectionStatus(peer_id) {
     peerConnections[peer_id].onconnectionstatechange = function (event) {
@@ -855,8 +926,7 @@ function handlePeersConnectionStatus(peer_id) {
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/onicecandidate
- *
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function handleOnIceCandidate(peer_id) {
     peerConnections[peer_id].onicecandidate = (event) => {
@@ -873,9 +943,8 @@ function handleOnIceCandidate(peer_id) {
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/ontrack
- *
- * @param {*} peer_id
- * @param {*} peers
+ * @param {string} peer_id socket.id
+ * @param {object} peers all peers info connected to the same room
  */
 function handleOnTrack(peer_id, peers) {
     peerConnections[peer_id].ontrack = (event) => {
@@ -890,8 +959,7 @@ function handleOnTrack(peer_id, peers) {
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addTrack
- *
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function handleAddTracks(peer_id) {
     localMediaStream.getTracks().forEach((track) => {
@@ -905,8 +973,7 @@ function handleAddTracks(peer_id) {
  * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createDataChannel
  * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/ondatachannel
  * https://developer.mozilla.org/en-US/docs/Web/API/RTCDataChannel/onmessage
- *
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function handleRTCDataChannels(peer_id) {
     peerConnections[peer_id].ondatachannel = (event) => {
@@ -949,8 +1016,7 @@ function handleRTCDataChannels(peer_id) {
 /**
  * Only one side of the peer connection should create the offer, the signaling server picks one to be the offerer.
  * The other user will get a 'sessionDescription' event and will create an offer, then send back an answer 'sessionDescription' to us
- *
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function handleRtcOffer(peer_id) {
     // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/onnegotiationneeded
@@ -985,8 +1051,7 @@ function handleRtcOffer(peer_id) {
 /**
  * Peers exchange session descriptions which contains information about their audio / video settings and that sort of stuff. First
  * the 'offerer' sends a description to the 'answerer' (with type "offer"), then the answerer sends one back (with type "answer").
- *
- * @param {*} config
+ * @param {object} config data
  */
 function handleSessionDescription(config) {
     console.log('Remote Session Description', config);
@@ -1037,8 +1102,7 @@ function handleSessionDescription(config) {
 /**
  * The offerer will send a number of ICE Candidate blobs to the answerer so they
  * can begin trying to find the best path to one another on the net.
- *
- * @param {*} config
+ * @param {object} config data
  */
 function handleIceCandidate(config) {
     let peer_id = config.peer_id;
@@ -1052,6 +1116,7 @@ function handleIceCandidate(config) {
 /**
  * Disconnected from Signaling Server.
  * Tear down all of our peer connections and remove all the media divs.
+ * @param {object} reason of disconnection
  */
 function handleDisconnect(reason) {
     console.log('Disconnected from signaling server', { reason: reason });
@@ -1074,8 +1139,7 @@ function handleDisconnect(reason) {
  * telling them to trash the media channels they have open for those that peer. If it was this client that left a channel,
  * they'll also receive the removePeers. If this client was disconnected, they wont receive removePeers, but rather the
  * signaling_socket.on('disconnect') code will kick in and tear down all the peer sessions.
- *
- * @param {*} config
+ * @param {object} config data
  */
 function handleRemovePeer(config) {
     console.log('Signaling server said to remove peer:', config);
@@ -1099,8 +1163,8 @@ function handleRemovePeer(config) {
 }
 
 /**
- * Set kmmeet theme | dark | grey | ...
- * @param {*} theme
+ * Set kmmeet  theme | dark | grey | ...
+ * @param {string} theme type
  */
 function setTheme(theme) {
     if (!theme) return;
@@ -1141,7 +1205,7 @@ function setTheme(theme) {
 
 /**
  * Set buttons bar position
- * @param {*} position vertical / horizontal
+ * @param {string} position vertical / horizontal
  */
 function setButtonsBarPosition(position) {
     if (!position || isMobileDevice) return;
@@ -1173,9 +1237,8 @@ function setButtonsBarPosition(position) {
  * Setup local media stuff. Ask user for permission to use the computers microphone and/or camera,
  * attach it to an <audio> or <video> tag if they give us access.
  * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
- *
- * @param {*} callback
- * @param {*} errorback
+ * @param {object} callback all ok
+ * @param {object} errorback something wrong
  */
 function setupLocalMedia(callback, errorback) {
     // if we've already been initialized do nothing
@@ -1222,7 +1285,7 @@ function setupLocalMedia(callback, errorback) {
 
 /**
  * Load Local Media Stream obj
- * @param {*} stream
+ * @param {object} stream media stream audio - video
  */
 function loadLocalMedia(stream) {
     console.log('Access granted to audio/video');
@@ -1290,9 +1353,9 @@ function loadLocalMedia(stream) {
     if (!isMobileDevice) {
         setTippy(myCountTime, 'Session Time', 'bottom');
         setTippy(myVideoParagraph, 'My name', 'bottom');
-        setTippy(myHandStatusIcon, 'My hand is RAISED', 'bottom');
-        setTippy(myVideoStatusIcon, 'My video is ON', 'bottom');
-        setTippy(myAudioStatusIcon, 'My audio is ON', 'bottom');
+        setTippy(myHandStatusIcon, 'My hand is raised', 'bottom');
+        setTippy(myVideoStatusIcon, 'My video is on', 'bottom');
+        setTippy(myAudioStatusIcon, 'My audio is on', 'bottom');
         setTippy(myVideoToImgBtn, 'Take a snapshot', 'bottom');
         setTippy(myVideoFullScreenBtn, 'Full screen mode', 'bottom');
     }
@@ -1352,19 +1415,51 @@ function loadLocalMedia(stream) {
     getHtmlElementsById();
     setButtonsToolTip();
     manageLeftButtons();
+    hideLeftButtons();
     setupMySettings();
     setupVideoUrlPlayer();
     startCountTime();
     handleBodyOnMouseMove();
     handleVideoPlayerFs('myVideo', 'myVideoFullScreenBtn');
+    handleFileDragAndDrop('myVideo', myPeerId, true);
     handleVideoToImg('myVideo', 'myVideoToImgBtn');
 }
 
 /**
+ * Check if screen is shared on join room
+ */
+function checkShareScreen() {
+    if (!isMobileDevice && isScreenEnabled && isScreenSharingSupported) {
+        playSound('newMessage');
+        // screenShareBtn.click(); // Chrome - Opera - Edge - Brave
+        // handle error: getDisplayMedia requires transient activation from a user gesture on Safari - FireFox
+        Swal.fire({
+            background: swalBackground,
+            position: 'center',
+            icon: 'question',
+            text: 'Do you want to share your screen?',
+            showDenyButton: true,
+            confirmButtonText: `Yes`,
+            denyButtonText: `No`,
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown',
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                screenShareBtn.click();
+            }
+        });
+    }
+}
+
+/**
  * Load Remote Media Stream obj
- * @param {*} stream
- * @param {*} peers
- * @param {*} peer_id
+ * @param {object} stream media stream audio - video
+ * @param {object} peers all peers info connected to the same room
+ * @param {string} peer_id socket.id
  */
 function loadRemoteMediaStream(stream, peers, peer_id) {
     // get data from peers obj
@@ -1387,8 +1482,9 @@ function loadRemoteMediaStream(stream, peers, peer_id) {
     const remoteHandStatusIcon = document.createElement('button');
     const remoteVideoStatusIcon = document.createElement('button');
     const remoteAudioStatusIcon = document.createElement('button');
-    const remotePrivateMsgBtn = document.createElement('button');
     const remoteYoutubeBtnBtn = document.createElement('button');
+    const remoteFileShareBtn = document.createElement('button');
+    const remotePrivateMsgBtn = document.createElement('button');
     const remotePeerKickOut = document.createElement('button');
     const remoteVideoToImgBtn = document.createElement('button');
     const remoteVideoFullScreenBtn = document.createElement('button');
@@ -1421,13 +1517,17 @@ function loadRemoteMediaStream(stream, peers, peer_id) {
     remoteAudioStatusIcon.setAttribute('id', peer_id + '_audioStatus');
     remoteAudioStatusIcon.className = 'fas fa-microphone';
 
-    // remote peer YouTube video
-    remoteYoutubeBtnBtn.setAttribute('id', peer_id + '_youtube');
-    remoteYoutubeBtnBtn.className = 'fab fa-youtube';
-
     // remote private message
     remotePrivateMsgBtn.setAttribute('id', peer_id + '_privateMsg');
     remotePrivateMsgBtn.className = 'fas fa-paper-plane';
+
+    // remote share file
+    remoteFileShareBtn.setAttribute('id', peer_id + '_shareFile');
+    remoteFileShareBtn.className = 'fas fa-upload';
+
+    // remote peer YouTube video
+    remoteYoutubeBtnBtn.setAttribute('id', peer_id + '_youtube');
+    remoteYoutubeBtnBtn.className = 'fab fa-youtube';
 
     // my video to image
     remoteVideoToImgBtn.setAttribute('id', peer_id + '_snapshot');
@@ -1444,11 +1544,12 @@ function loadRemoteMediaStream(stream, peers, peer_id) {
     // no mobile devices
     if (!isMobileDevice) {
         setTippy(remoteVideoParagraph, 'Participant name', 'bottom');
-        setTippy(remoteHandStatusIcon, 'Participant hand is RAISED', 'bottom');
-        setTippy(remoteVideoStatusIcon, 'Participant video is ON', 'bottom');
-        setTippy(remoteAudioStatusIcon, 'Participant audio is ON', 'bottom');
+        setTippy(remoteHandStatusIcon, 'Participant hand is raised', 'bottom');
+        setTippy(remoteVideoStatusIcon, 'Participant video is on', 'bottom');
+        setTippy(remoteAudioStatusIcon, 'Participant audio is on', 'bottom');
         setTippy(remoteYoutubeBtnBtn, 'Send YouTube video', 'bottom');
-        setTippy(remotePrivateMsgBtn, 'Send direct message', 'bottom');
+        setTippy(remotePrivateMsgBtn, 'Send private message', 'bottom');
+        setTippy(remoteFileShareBtn, 'Send file', 'bottom');
         setTippy(remoteVideoToImgBtn, 'Take a snapshot', 'bottom');
         setTippy(remotePeerKickOut, 'Kick out', 'bottom');
         setTippy(remoteVideoFullScreenBtn, 'Full screen mode', 'bottom');
@@ -1473,8 +1574,9 @@ function loadRemoteMediaStream(stream, peers, peer_id) {
     remoteStatusMenu.appendChild(remoteHandStatusIcon);
     remoteStatusMenu.appendChild(remoteVideoStatusIcon);
     remoteStatusMenu.appendChild(remoteAudioStatusIcon);
-    remoteStatusMenu.appendChild(remoteYoutubeBtnBtn);
     remoteStatusMenu.appendChild(remotePrivateMsgBtn);
+    remoteStatusMenu.appendChild(remoteFileShareBtn);
+    remoteStatusMenu.appendChild(remoteYoutubeBtnBtn);
     remoteStatusMenu.appendChild(remoteVideoToImgBtn);
     remoteStatusMenu.appendChild(remotePeerKickOut);
     remoteStatusMenu.appendChild(remoteVideoFullScreenBtn);
@@ -1507,6 +1609,8 @@ function loadRemoteMediaStream(stream, peers, peer_id) {
     handleVideoToImg(peer_id + '_video', peer_id + '_snapshot', peer_id);
     // handle video full screen mode
     handleVideoPlayerFs(peer_id + '_video', peer_id + '_fullScreen', peer_id);
+    // handle file share drag and drop
+    handleFileDragAndDrop(peer_id + '_video', peer_id);
     // handle kick out button event
     handlePeerKickOutBtn(peer_id);
     // refresh remote peers avatar name
@@ -1523,6 +1627,8 @@ function loadRemoteMediaStream(stream, peers, peer_id) {
     handlePeerVideoBtn(peer_id);
     // handle remote private messages
     handlePeerPrivateMsg(peer_id, peer_name);
+    // handle remote send file
+    handlePeerSendFile(peer_id);
     // handle remote youtube video
     handlePeerYouTube(peer_id);
     // show status menu
@@ -1533,8 +1639,8 @@ function loadRemoteMediaStream(stream, peers, peer_id) {
 
 /**
  * Log stream settings info
- * @param {*} name
- * @param {*} stream
+ * @param {string} name function name called from
+ * @param {object} stream media stream audio - video
  */
 function logStreamSettingsInfo(name, stream) {
     console.log(name, {
@@ -1613,11 +1719,9 @@ function adaptAspectRatio() {
 }
 
 /**
- * Refresh video - chat image avatar on name changes
- * https://eu.ui-avatars.com/
- *
- * @param {*} videoAvatarImageId element
- * @param {*} peerName
+ * Refresh video - chat image avatar on name changes: https://eu.ui-avatars.com/
+ * @param {string} videoAvatarImageId element id
+ * @param {string} peerName
  */
 function setPeerAvatarImgName(videoAvatarImageId, peerName) {
     let videoAvatarImageElement = getId(videoAvatarImageId);
@@ -1631,8 +1735,8 @@ function setPeerAvatarImgName(videoAvatarImageId, peerName) {
 
 /**
  * Set Chat avatar image by peer name
- * @param {*} avatar left/right
- * @param {*} peerName my/friends
+ * @param {string} avatar position left/right
+ * @param {string} peerName me or peer name
  */
 function setPeerChatAvatarImgName(avatar, peerName) {
     let avatarImg = avatarApiUrl + '?name=' + peerName + '&size=32' + '&background=random&rounded=true';
@@ -1653,10 +1757,9 @@ function setPeerChatAvatarImgName(avatar, peerName) {
  * On video player click, go on full screen mode ||
  * On button click, go on full screen mode.
  * Press Esc to exit from full screen mode, or click again.
- *
- * @param {*} videoId
- * @param {*} videoFullScreenBtnId
- * @param {*} peer_id
+ * @param {string} videoId uuid video element
+ * @param {string} videoFullScreenBtnId uuid full screen btn
+ * @param {string} peer_id socket.id
  */
 function handleVideoPlayerFs(videoId, videoFullScreenBtnId, peer_id = null) {
     let videoPlayer = getId(videoId);
@@ -1762,10 +1865,55 @@ function handleVideoPlayerFs(videoId, videoFullScreenBtnId, peer_id = null) {
 }
 
 /**
+ * Handle file drag and drop on video element
+ * @param {string} elemId element id
+ * @param {string} peer_id peer id
+ * @param {boolean} itsMe true/false
+ */
+function handleFileDragAndDrop(elemId, peer_id, itsMe = false) {
+    let videoPeer = getId(elemId);
+
+    videoPeer.addEventListener('dragover', function (e) {
+        e.preventDefault();
+    });
+
+    videoPeer.addEventListener('drop', function (e) {
+        e.preventDefault();
+        if (itsMe) {
+            userLog('warning', 'You cannot send files to yourself.');
+            return;
+        }
+        if (sendInProgress) {
+            userLog('warning', 'Please wait for the previous file to be sent.');
+            return;
+        }
+        if (e.dataTransfer.items && e.dataTransfer.items.length > 1) {
+            userLog('warning', 'Please drag and drop a single file.');
+            return;
+        }
+        // Use DataTransferItemList interface to access the file(s)
+        if (e.dataTransfer.items) {
+            // If dropped items aren't files, reject them
+            let item = e.dataTransfer.items[0].webkitGetAsEntry();
+            console.log('Drag and drop', item);
+            if (item.isDirectory) {
+                userLog('warning', 'Please drag and drop a single file not a folder.', 'top-end');
+                return;
+            }
+            let file = e.dataTransfer.items[0].getAsFile();
+            sendFileInformations(file, peer_id);
+        } else {
+            // Use DataTransfer interface to access the file(s)
+            sendFileInformations(e.dataTransfer.files[0], peer_id);
+        }
+    });
+}
+
+/**
  * Handle Video to Img click event
- * @param {*} videoStream
- * @param {*} videoToImgBtn
- * @param {*} peer_id
+ * @param {string} videoStream uuid video element
+ * @param {string} videoToImgBtn uuid snapshot btn
+ * @param {string} peer_id socket.id
  */
 function handleVideoToImg(videoStream, videoToImgBtn, peer_id = null) {
     let videoBtn = getId(videoToImgBtn);
@@ -1791,7 +1939,7 @@ function handleVideoToImg(videoStream, videoToImgBtn, peer_id = null) {
 
 /**
  * Save Video Frame to Image
- * @param {*} video video element
+ * @param {object} video element from where to take the snapshot
  */
 function takeSnapshot(video) {
     playSound('snapshot');
@@ -1821,8 +1969,9 @@ function startCountTime() {
 }
 
 /**
- * Return time to string
- * @param {*} time
+ * Convert time to string
+ * @param {integer} time
+ * @return {string} format HH:MM:SS
  */
 function getTimeToString(time) {
     let diffInHrs = time / 3600000;
@@ -1857,6 +2006,26 @@ function manageLeftButtons() {
     setMySettingsBtn();
     setAboutBtn();
     setLeaveRoomBtn();
+}
+
+/**
+ * Hide not desired buttons
+ */
+function hideLeftButtons() {
+    if (!showShareRoomBtn) shareRoomBtn.style.display = 'none';
+    if (!showAudioBtn) audioBtn.style.display = 'none';
+    if (!showVideoBtn) videoBtn.style.display = 'none';
+    if (!showSwapCameraBtn) swapCameraBtn.style.display = 'none';
+    if (!showScreenShareBtn) screenShareBtn.style.display = 'none';
+    if (!showRecordStreamBtn) recordStreamBtn.style.display = 'none';
+    if (!showFullScreenBtn) fullScreenBtn.style.display = 'none';
+    if (!showChatRoomBtn) chatRoomBtn.style.display = 'none';
+    if (!showCaptionBtn) captionBtn.style.display = 'none';
+    if (!showMyHandBtn) myHandBtn.style.display = 'none';
+    if (!showWhiteboardBtn) whiteboardBtn.style.display = 'none';
+    if (!showFileShareBtn) fileShareBtn.style.display = 'none';
+    if (!showMySettingsBtn) mySettingsBtn.style.display = 'none';
+    if (!showAboutBtn) aboutBtn.style.display = 'none';
 }
 
 /**
@@ -1907,6 +2076,7 @@ function setSwapCameraBtn() {
  */
 function setScreenShareBtn() {
     if (!isMobileDevice && (navigator.getDisplayMedia || navigator.mediaDevices.getDisplayMedia)) {
+        isScreenSharingSupported = true;
         screenShareBtn.addEventListener('click', (e) => {
             toggleScreenSharing();
         });
@@ -1941,7 +2111,7 @@ function setFullScreenBtn() {
                 isDocumentOnFullScreen = false;
                 // only for desktop
                 if (!isMobileDevice) {
-                    setTippy(fullScreenBtn, 'VIEW full screen', 'right-start');
+                    setTippy(fullScreenBtn, 'View full screen', 'right-start');
                 }
             }
         });
@@ -2146,7 +2316,7 @@ function setMyHandBtn() {
 }
 
 /**
- * Whiteboard : https://github.com/fabricjs/fabric.js
+ * Whiteboard: https://github.com/fabricjs/fabric.js
  */
 function setMyWhiteboardBtn() {
     dragElement(whiteboard, whiteboardHeader);
@@ -2225,7 +2395,7 @@ function setMyFileShareBtn() {
 
     fileShareBtn.addEventListener('click', (e) => {
         //window.open("https://fromsmash.com"); // for Big Data
-        selectFileToShare();
+        selectFileToShare(myPeerId, true);
     });
     sendAbortBtn.addEventListener('click', (e) => {
         abortFileTransfer();
@@ -2300,6 +2470,9 @@ function setupMySettings() {
     tabStylingBtn.addEventListener('click', (e) => {
         openTab(e, 'tabStyling');
     });
+    tabLanguagesBtn.addEventListener('click', (e) => {
+        openTab(e, 'tabLanguages');
+    });
     // audio - video select box
     selectors = [audioInputSelect, audioOutputSelect, videoSelect];
     audioOutputSelect.disabled = !('sinkId' in HTMLMediaElement.prototype);
@@ -2373,8 +2546,11 @@ function setupMySettings() {
     hideEveryoneBtn.addEventListener('click', (e) => {
         disableAllPeers('video');
     });
-    lockUnlockRoomBtn.addEventListener('click', (e) => {
-        lockUnlockRoom();
+    lockRoomBtn.addEventListener('click', (e) => {
+        handleRoomAction({ action: 'lock' }, true);
+    });
+    unlockRoomBtn.addEventListener('click', (e) => {
+        handleRoomAction({ action: 'unlock' }, true);
     });
 }
 
@@ -2409,7 +2585,7 @@ function refreshLocalMedia() {
 
 /**
  * Get audio - video constraints
- * @returns constraints
+ * @returns {object} audio - video constraints
  */
 function getAudioVideoConstraints() {
     const audioSource = audioInputSelect.value;
@@ -2429,9 +2605,9 @@ function getAudioVideoConstraints() {
 }
 
 /**
- * https://webrtc.github.io/samples/src/content/getusermedia/resolution/
- *
- * @returns video constraints
+ * Get video constraints: https://webrtc.github.io/samples/src/content/getusermedia/resolution/
+ * @param {string} videoQuality desired video quality
+ * @returns {object} video constraints
  */
 function getVideoConstraints(videoQuality) {
     let frameRate = { max: videoMaxFrameRate };
@@ -2477,9 +2653,8 @@ function getVideoConstraints(videoQuality) {
 }
 
 /**
- * https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/applyConstraints
- *
- * @param {*} maxFrameRate
+ * Set local max fps: https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/applyConstraints
+ * @param {string} maxFrameRate desired max frame rate
  */
 function setLocalMaxFps(maxFrameRate) {
     localMediaStream
@@ -2495,7 +2670,7 @@ function setLocalMaxFps(maxFrameRate) {
 }
 
 /**
- * https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/applyConstraints
+ * Set local video quality: https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/applyConstraints
  */
 function setLocalVideoQuality() {
     let videoConstraints = getVideoConstraints(videoQualitySelect.value ? videoQualitySelect.value : 'default');
@@ -2523,8 +2698,8 @@ function changeAudioDestination() {
 
 /**
  * Attach audio output device to video element using device/sink ID.
- * @param {*} element
- * @param {*} sinkId
+ * @param {object} element video element to attach the audio output
+ * @param {string} sinkId uuid audio output device
  */
 function attachSinkId(element, sinkId) {
     if (typeof element.sinkId !== 'undefined') {
@@ -2548,7 +2723,8 @@ function attachSinkId(element, sinkId) {
 
 /**
  * Got Stream and append to local media
- * @param {*} stream
+ * @param {object} stream media stream audio - video
+ * @returns {object} media Devices Info
  */
 function gotStream(stream) {
     refreshMyStreamToPeers(stream, true);
@@ -2565,7 +2741,7 @@ function gotStream(stream) {
  * Get audio-video Devices and show it to select box
  * https://webrtc.github.io/samples/src/content/devices/input-output/
  * https://github.com/webrtc/samples/tree/gh-pages/src/content/devices/input-output
- * @param {*} deviceInfos
+ * @param {object} deviceInfos device infos
  */
 function gotDevices(deviceInfos) {
     // Handles being called several times to update labels. Preserve values.
@@ -2611,8 +2787,8 @@ function gotDevices(deviceInfos) {
 }
 
 /**
- * Handle getUserMedia error
- * @param {*} err
+ * Handle getUserMedia error: https://blog.addpipe.com/common-getusermedia-errors/
+ * @param {object} err user media error
  */
 function handleError(err) {
     console.log('navigator.MediaDevices.getUserMedia error: ', err);
@@ -2626,13 +2802,12 @@ function handleError(err) {
         default:
             userLog('error', 'GetUserMedia error ' + err);
     }
-    // https://blog.addpipe.com/common-getusermedia-errors/
 }
 
 /**
  * AttachMediaStream stream to element
- * @param {*} element
- * @param {*} stream
+ * @param {object} element element to attach the stream
+ * @param {object} stream media stream audio - video
  */
 function attachMediaStream(element, stream) {
     //console.log("DEPRECATED, attachMediaStream will soon be removed.");
@@ -2788,7 +2963,7 @@ function copyRoomURL() {
 
 /**
  * Share room id by email
- * @param {*} message email | subject | body
+ * @param {object} message content: email | subject | body
  */
 function shareRoomByEmail(message) {
     let email = message.email;
@@ -2799,8 +2974,9 @@ function shareRoomByEmail(message) {
 
 /**
  * Handle Audio ON - OFF
- * @param {*} e event
- * @param {*} init bool true/false
+ * @param {object} e event
+ * @param {boolean} init on join room
+ * @param {boolean} force audio off (default false)
  */
 function handleAudio(e, init, force = null) {
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream/getAudioTracks
@@ -2813,7 +2989,7 @@ function handleAudio(e, init, force = null) {
     if (init) {
         audioBtn.className = 'fas fa-microphone' + (myAudioStatus ? '' : '-slash');
         if (!isMobileDevice) {
-            setTippy(initAudioBtn, myAudioStatus ? 'Click Audio OFF' : 'Click Audio ON', 'top');
+            setTippy(initAudioBtn, myAudioStatus ? 'Stop the audio' : 'Start the audio', 'top');
         }
     }
     setMyAudioStatus(myAudioStatus);
@@ -2821,8 +2997,9 @@ function handleAudio(e, init, force = null) {
 
 /**
  * Handle Video ON - OFF
- * @param {*} e event
- * @param {*} init bool true/false
+ * @param {object} e event
+ * @param {boolean} init on join room
+ * @param {boolean} force video off (default false)
  */
 function handleVideo(e, init, force = null) {
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream/getVideoTracks
@@ -2835,7 +3012,7 @@ function handleVideo(e, init, force = null) {
     if (init) {
         videoBtn.className = 'fas fa-video' + (myVideoStatus ? '' : '-slash');
         if (!isMobileDevice) {
-            setTippy(initVideoBtn, myVideoStatus ? 'Click Video OFF' : 'Click Video ON', 'top');
+            setTippy(initVideoBtn, myVideoStatus ? 'Stop the video' : 'Start the video', 'top');
         }
     }
     setMyVideoStatus(myVideoStatus);
@@ -2911,6 +3088,16 @@ function toggleScreenSharing() {
             refreshMyLocalStream(screenStream);
             myVideo.classList.toggle('mirror');
             setScreenSharingStatus(isScreenStreaming);
+            if (isScreenStreaming) {
+                setMyVideoStatusTrue();
+                if (countPeerConnections() == 1) {
+                    emitPeersAction('screenStart');
+                    setAspectRatio(2); // 16:9
+                }
+            } else {
+                emitPeersAction('screenStop');
+                adaptAspectRatio();
+            }
         })
         .catch((err) => {
             console.error('[Error] Unable to share the screen', err);
@@ -2920,18 +3107,18 @@ function toggleScreenSharing() {
 
 /**
  * Set Screen Sharing Status
- * @param {*} status
+ * @param {boolean} status of screen sharing
  */
 function setScreenSharingStatus(status) {
     screenShareBtn.className = status ? 'fas fa-stop-circle' : 'fas fa-desktop';
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(screenShareBtn, status ? 'STOP screen sharing' : 'START screen sharing', 'right-start');
+        setTippy(screenShareBtn, status ? 'Stop screen sharing' : 'Start screen sharing', 'right-start');
     }
 }
 
 /**
- * set myVideoStatus true
+ * Set myVideoStatus true
  */
 function setMyVideoStatusTrue() {
     if (myVideoStatus) return;
@@ -2944,7 +3131,7 @@ function setMyVideoStatusTrue() {
     emitPeerStatus('video', myVideoStatus);
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(videoBtn, 'Click Video OFF', 'right-start');
+        setTippy(videoBtn, 'Stop the video', 'right-start');
     }
 }
 
@@ -2966,14 +3153,14 @@ function toggleFullScreen() {
     }
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(fullScreenBtn, isDocumentOnFullScreen ? 'EXIT full screen' : 'VIEW full screen', 'right-start');
+        setTippy(fullScreenBtn, isDocumentOnFullScreen ? 'Exit full screen' : 'View full screen', 'right-start');
     }
 }
 
 /**
  * Refresh my stream changes to connected peers in the room
- * @param {*} stream
- * @param {*} localAudioTrackChange true or false(default)
+ * @param {object} stream media stream audio - video
+ * @param {boolean} localAudioTrackChange default false
  */
 function refreshMyStreamToPeers(stream, localAudioTrackChange = false) {
     if (!thereIsPeerConnections()) return;
@@ -2999,8 +3186,8 @@ function refreshMyStreamToPeers(stream, localAudioTrackChange = false) {
 
 /**
  * Refresh my local stream
- * @param {*} stream
- * @param {*} localAudioTrackChange true or false(default)
+ * @param {object} stream media stream audio - video
+ * @param {boolean} localAudioTrackChange default false
  */
 function refreshMyLocalStream(stream, localAudioTrackChange = false) {
     stream.getVideoTracks()[0].enabled = true;
@@ -3035,7 +3222,7 @@ function refreshMyLocalStream(stream, localAudioTrackChange = false) {
 
     /**
      * When you stop the screen sharing, on default i turn back to the webcam with video stream ON.
-     * If you want the webcam with video stream OFF, just disable it with the button (Click Video OFF),
+     * If you want the webcam with video stream OFF, just disable it with the button (Stop the video),
      * before to stop the screen sharing.
      */
     if (myVideoStatus === false) localMediaStream.getVideoTracks()[0].enabled = false;
@@ -3058,7 +3245,7 @@ function startRecordingTime() {
 
 /**
  * Get MediaRecorder MimeTypes
- * @returns mimeType
+ * @returns {boolean} is mimeType supported by media recorder
  */
 function getSupportedMimeTypes() {
     const possibleTypes = [
@@ -3125,8 +3312,8 @@ function startStreamRecording() {
 
 /**
  * Notify me if someone start to recording they screen + audio
- * @param {*} from peer_name
- * @param {*} action Started Stopped
+ * @param {string} from peer_name
+ * @param {string} action recording action
  */
 function notifyRecording(from, action) {
     let msg = '[ 🔴 REC ] : ' + action + ' to recording his own screen and audio';
@@ -3141,8 +3328,8 @@ function notifyRecording(from, action) {
 }
 
 /**
- * Handle Media Recorder obj
- * @param {*} mediaRecorder
+ * Handle Media Recorder
+ * @param {object} mediaRecorder
  */
 function handleMediaRecorder(mediaRecorder) {
     mediaRecorder.start();
@@ -3153,7 +3340,7 @@ function handleMediaRecorder(mediaRecorder) {
 
 /**
  * Handle Media Recorder onstart event
- * @param {*} event
+ * @param {object} event of media recorder
  */
 function handleMediaRecorderStart(event) {
     playSound('recStart');
@@ -3167,7 +3354,7 @@ function handleMediaRecorderStart(event) {
     startRecordingTime();
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(recordStreamBtn, 'STOP recording', 'right-start');
+        setTippy(recordStreamBtn, 'Stop recording', 'right-start');
     } else {
         swapCameraBtn.style.display = 'none';
     }
@@ -3175,7 +3362,7 @@ function handleMediaRecorderStart(event) {
 
 /**
  * Handle Media Recorder ondata event
- * @param {*} event
+ * @param {object} event of media recorder
  */
 function handleMediaRecorderData(event) {
     console.log('MediaRecorder data: ', event);
@@ -3184,7 +3371,7 @@ function handleMediaRecorderData(event) {
 
 /**
  * Handle Media Recorder onstop event
- * @param {*} event
+ * @param {object} event of media recorder
  */
 function handleMediaRecorderStop(event) {
     playSound('recStop');
@@ -3204,7 +3391,7 @@ function handleMediaRecorderStop(event) {
     downloadRecordedStream();
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(recordStreamBtn, 'START recording', 'right-start');
+        setTippy(recordStreamBtn, 'Start recording', 'right-start');
     } else {
         swapCameraBtn.style.display = 'block';
     }
@@ -3246,7 +3433,7 @@ function downloadRecordedStream() {
 
 /**
  * Create Chat Room Data Channel
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function createChatDataChannel(peer_id) {
     chatDataChannels[peer_id] = peerConnections[peer_id].createDataChannel('kmmeet_chat_channel');
@@ -3286,7 +3473,7 @@ function showChatRoomDraggable() {
     isChatRoomVisible = true;
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(chatRoomBtn, 'CLOSE the chat', 'right-start');
+        setTippy(chatRoomBtn, 'Close the chat', 'right-start');
     }
 }
 
@@ -3306,7 +3493,7 @@ function showCaptionDraggable() {
     isCaptionBoxVisible = true;
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(captionBtn, 'CLOSE the caption', 'right-start');
+        setTippy(captionBtn, 'Close the caption', 'right-start');
     }
 }
 /**
@@ -3317,7 +3504,7 @@ function cleanMessages() {
     Swal.fire({
         background: swalBackground,
         position: 'center',
-        title: 'Clean up chat Messages?',
+        title: 'Clean up chat messages?',
         imageUrl: deleteImg,
         showDenyButton: true,
         confirmButtonText: `Yes`,
@@ -3351,7 +3538,7 @@ function cleanCaptions() {
     Swal.fire({
         background: swalBackground,
         position: 'center',
-        title: 'Clean up all caption transcripts ?',
+        title: 'Clean up all caption transcripts?',
         imageUrl: deleteImg,
         showDenyButton: true,
         confirmButtonText: `Yes`,
@@ -3389,7 +3576,7 @@ function hideChatRoomAndEmojiPicker() {
     isChatEmojiVisible = false;
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(chatRoomBtn, 'OPEN the chat', 'right-start');
+        setTippy(chatRoomBtn, 'Open the chat', 'right-start');
     }
 }
 
@@ -3402,7 +3589,7 @@ function hideCaptionBox() {
     isCaptionBoxVisible = false;
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(captionBtn, 'OPEN the caption', 'right-start');
+        setTippy(captionBtn, 'Open the caption', 'right-start');
     }
 }
 
@@ -3416,7 +3603,7 @@ function sendChatMessage() {
         return;
     }
 
-    const msg = msgerInput.value;
+    const msg = checkMsg(msgerInput.value);
     // empity msg or
     if (!msg) return;
 
@@ -3427,7 +3614,7 @@ function sendChatMessage() {
 
 /**
  * handle Incoming Data Channel Chat Messages
- * @param {*} dataMessage
+ * @param {object} dataMessage chat messages
  */
 function handleDataChannelChat(dataMessage) {
     if (!dataMessage) return;
@@ -3452,16 +3639,16 @@ function handleDataChannelChat(dataMessage) {
 }
 
 /**
- * Handle text transcipt getting from peers
- * @param {*} config
+ * Handle text transcript getting from peers
+ * @param {object} config data
  */
 function handleDataChannelSpeechTranscript(config) {
     handleSpeechTranscript(config);
 }
 
 /**
- * Handle text transcipt getting from peers
- * @param {*} data
+ * Handle text transcript getting from peers
+ * @param {object} config data
  */
 function handleSpeechTranscript(config) {
     if (!config) return;
@@ -3498,7 +3685,7 @@ function handleSpeechTranscript(config) {
 
 /**
  * Escape Special Chars
- * @param {*} regex
+ * @param {string} regex string to replace
  */
 function escapeSpecialChars(regex) {
     return regex.replace(/([()[{*+.$^\\|?])/g, '\\$1');
@@ -3506,11 +3693,11 @@ function escapeSpecialChars(regex) {
 
 /**
  * Append Message to msger chat room
- * @param {*} from
- * @param {*} img
- * @param {*} side
- * @param {*} msg
- * @param {*} privateMsg
+ * @param {string} from peer name
+ * @param {string} img images url
+ * @param {string} side left/right
+ * @param {string} msg message to append
+ * @param {boolean} privateMsg if is private message
  */
 function appendMessage(from, img, side, msg, privateMsg) {
     let time = getFormatDate(new Date());
@@ -3525,8 +3712,6 @@ function appendMessage(from, img, side, msg, privateMsg) {
     // check if i receive a private message
     let msgBubble = privateMsg ? 'private-msg-bubble' : 'msg-bubble';
 
-    // console.log("chatMessages", chatMessages);
-    let cMsg = detectUrl(msg);
     const msgHTML = `
 	<div class="msg ${side}-msg">
 		<div class="msg-img" style="background-image: url('${img}')"></div>
@@ -3535,7 +3720,7 @@ function appendMessage(from, img, side, msg, privateMsg) {
                 <div class="msg-info-name">${from}</div>
                 <div class="msg-info-time">${time}</div>
             </div>
-            <div class="msg-text">${cMsg}</div>
+            <div class="msg-text">${msg}</div>
         </div>
 	</div>
     `;
@@ -3545,7 +3730,7 @@ function appendMessage(from, img, side, msg, privateMsg) {
 
 /**
  * Add participants in the chat room lists
- * @param {*} peers
+ * @param {object} peers all peers info connected to the same room
  */
 function msgerAddPeers(peers) {
     // console.log("peers", peers);
@@ -3565,7 +3750,9 @@ function msgerAddPeers(peers) {
                         type="text"
                         placeholder="💬 Enter your message..."
                     />
-                    <button id="${peer_id}_pMsgBtn" class="fas fa-paper-plane" value="${peer_name}">&nbsp;${peer_name}</button>
+                    <button id="${peer_id}_pMsgBtn" value="${peer_name}">
+                        &nbsp;${peer_name}<i class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
                 `;
                 msgerCPList.insertAdjacentHTML('beforeend', msgerPrivateDiv);
@@ -3597,7 +3784,7 @@ function searchPeer() {
 
 /**
  * Remove participant from chat room lists
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function msgerRemovePeer(peer_id) {
     let msgerPrivateDiv = getId(peer_id + '_pMsgDiv');
@@ -3613,8 +3800,8 @@ function msgerRemovePeer(peer_id) {
 
 /**
  * Setup msger buttons to send private messages
- * @param {*} msgerPrivateBtn
- * @param {*} msgerPrivateMsgInput
+ * @param {object} msgerPrivateBtn chat private message send button
+ * @param {object} msgerPrivateMsgInput chat private message text input
  */
 function addMsgerPrivateBtn(msgerPrivateBtn, msgerPrivateMsgInput) {
     // add button to send private messages
@@ -3632,23 +3819,29 @@ function addMsgerPrivateBtn(msgerPrivateBtn, msgerPrivateMsgInput) {
     });
 
     function sendPrivateMessage() {
-        let pMsg = msgerPrivateMsgInput.value;
-        if (!pMsg) return;
+        let pMsg = checkMsg(msgerPrivateMsgInput.value);
+        if (!pMsg) {
+            msgerPrivateMsgInput.value = '';
+            return;
+        }
         let toPeerName = msgerPrivateBtn.value;
         emitMsg(myPeerName, toPeerName, pMsg, true);
-        appendMessage(myPeerName, rightChatAvatar, 'right', pMsg + '<br/><hr>Direct message to ' + toPeerName, true);
+        appendMessage(myPeerName, rightChatAvatar, 'right', pMsg + '<br/><hr>Private message to ' + toPeerName, true);
         msgerPrivateMsgInput.value = '';
         msgerCP.style.display = 'none';
     }
 }
 
 /**
+ * Check Message
  * Detect url from text and make it clickable
- * Detect also if url is a img to create preview of it
- * @param {*} text
- * @returns html
+ * If url is a img to create preview of it
+ * Prevent XSS (strip html part)
+ * @param {string} text passed text
+ * @returns {string} html format
  */
-function detectUrl(text) {
+function checkMsg(text) {
+    if (isHtml(text)) return stripHtml(text);
     let urlRegex = /(https?:\/\/[^\s]+)/g;
     return text.replace(urlRegex, (url) => {
         if (isImageURL(text)) return '<p><img src="' + url + '" alt="img" width="200" height="auto"/></p>';
@@ -3657,17 +3850,43 @@ function detectUrl(text) {
 }
 
 /**
+ * Strip Html
+ * @param {string} html code
+ * @returns only text from html
+ */
+function stripHtml(html) {
+    // return html.replace(/<[^>]+>/g, '');
+    let doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
+}
+
+/**
+ * Check if string contain html
+ * @param {string} str
+ * @returns
+ */
+function isHtml(str) {
+    var a = document.createElement('div');
+    a.innerHTML = str;
+    for (var c = a.childNodes, i = c.length; i--; ) {
+        if (c[i].nodeType == 1) return true;
+    }
+    return false;
+}
+
+/**
  * Check if url passed is a image
- * @param {*} url
- * @returns true/false
+ * @param {string} url to check
+ * @returns {boolean} true/false
  */
 function isImageURL(url) {
     return url.match(/\.(jpeg|jpg|gif|png|tiff|bmp)$/) != null;
 }
 
 /**
- * Format data h:m:s
- * @param {*} date
+ * Format date
+ * @param {object} date
+ * @returns {string} date format h:m:s
  */
 function getFormatDate(date) {
     const time = date.toTimeString().split(' ')[0];
@@ -3676,10 +3895,10 @@ function getFormatDate(date) {
 
 /**
  * Send message over Secure dataChannels
- * @param {*} from
- * @param {*} to
- * @param {*} msg
- * @param {*} privateMsg true/false
+ * @param {string} from peer name
+ * @param {string} to peer name
+ * @param {string} msg message to send
+ * @param {boolean} privateMsg if is a private message
  */
 function emitMsg(from, to, msg, privateMsg) {
     if (!msg) return;
@@ -3766,9 +3985,8 @@ function hideShowMySettings() {
 /**
  * Handle html tab settings
  * https://www.w3schools.com/howto/howto_js_tabs.asp
- *
- * @param {*} evt
- * @param {*} tabName
+ * @param {object} evt event
+ * @param {string} tabName name of the tab to open
  */
 function openTab(evt, tabName) {
     let i, tabcontent, tablinks;
@@ -3813,7 +4031,7 @@ function updateMyPeerName() {
 
 /**
  * Append updated peer name to video player
- * @param {*} config
+ * @param {object} config data
  */
 function handlePeerName(config) {
     let peer_id = config.peer_id;
@@ -3832,8 +4050,8 @@ function handlePeerName(config) {
 
 /**
  * Send my Video-Audio-Hand... status
- * @param {*} element
- * @param {*} status
+ * @param {string} element typo
+ * @param {boolean} status true/false
  */
 function emitPeerStatus(element, status) {
     sendToServer('peerStatus', {
@@ -3852,13 +4070,13 @@ function setMyHandStatus() {
         // Raise hand
         myHandStatus = false;
         if (!isMobileDevice) {
-            setTippy(myHandBtn, 'RAISE your hand', 'right-start');
+            setTippy(myHandBtn, 'Raise your hand', 'right-start');
         }
     } else {
         // Lower hand
         myHandStatus = true;
         if (!isMobileDevice) {
-            setTippy(myHandBtn, 'LOWER your hand', 'right-start');
+            setTippy(myHandBtn, 'Lower your hand', 'right-start');
         }
         playSound('raiseHand');
     }
@@ -3868,23 +4086,23 @@ function setMyHandStatus() {
 
 /**
  * Set My Audio Status Icon and Title
- * @param {*} status
+ * @param {boolean} status of my audio
  */
 function setMyAudioStatus(status) {
     myAudioStatusIcon.className = 'fas fa-microphone' + (status ? '' : '-slash');
     // send my audio status to all peers in the room
     emitPeerStatus('audio', status);
-    setTippy(myAudioStatusIcon, status ? 'My audio is ON' : 'My audio is OFF', 'bottom');
+    setTippy(myAudioStatusIcon, status ? 'My audio is on' : 'My audio is off', 'bottom');
     status ? playSound('on') : playSound('off');
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(audioBtn, status ? 'Click Audio OFF' : 'Click Audio ON', 'right-start');
+        setTippy(audioBtn, status ? 'Stop the audio' : 'Start the audio', 'right-start');
     }
 }
 
 /**
  * Set My Video Status Icon and Title
- * @param {*} status
+ * @param {boolean} status of my video
  */
 function setMyVideoStatus(status) {
     // on vdeo OFF display my video avatar name
@@ -3892,17 +4110,17 @@ function setMyVideoStatus(status) {
     myVideoStatusIcon.className = 'fas fa-video' + (status ? '' : '-slash');
     // send my video status to all peers in the room
     emitPeerStatus('video', status);
-    setTippy(myVideoStatusIcon, status ? 'My video is ON' : 'My video is OFF', 'bottom');
+    setTippy(myVideoStatusIcon, status ? 'My video is on' : 'My video is off', 'bottom');
     status ? playSound('on') : playSound('off');
     // only for desktop
     if (!isMobileDevice) {
-        setTippy(videoBtn, status ? 'Click Video OFF' : 'Click Video ON', 'right-start');
+        setTippy(videoBtn, status ? 'Stop the video' : 'Start the video', 'right-start');
     }
 }
 
 /**
  * Handle peer audio - video - hand status
- * @param {*} config
+ * @param {object} config data
  */
 function handlePeerStatus(config) {
     //
@@ -3926,9 +4144,9 @@ function handlePeerStatus(config) {
 
 /**
  * Set Participant Hand Status Icon and Title
- * @param {*} peer_id
- * @param {*} peer_name
- * @param {*} status
+ * @param {string} peer_id socket.id
+ * @param {string} peer_name peer name
+ * @param {boolean} status of the hand
  */
 function setPeerHandStatus(peer_id, peer_name, status) {
     let peerHandStatus = getId(peer_id + '_handStatus');
@@ -3941,21 +4159,21 @@ function setPeerHandStatus(peer_id, peer_name, status) {
 
 /**
  * Set Participant Audio Status Icon and Title
- * @param {*} peer_id
- * @param {*} status
+ * @param {string} peer_id socket.id
+ * @param {boolean} status of peer audio
  */
 function setPeerAudioStatus(peer_id, status) {
     let peerAudioStatus = getId(peer_id + '_audioStatus');
     if (peerAudioStatus) {
         peerAudioStatus.className = 'fas fa-microphone' + (status ? '' : '-slash');
-        setTippy(peerAudioStatus, status ? 'Participant audio is ON' : 'Participant audio is OFF', 'bottom');
+        setTippy(peerAudioStatus, status ? 'Participant audio is on' : 'Participant audio is off', 'bottom');
         status ? playSound('on') : playSound('off');
     }
 }
 
 /**
  * Mute Audio to specific user in the room
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function handlePeerAudioBtn(peer_id) {
     let peerAudioBtn = getId(peer_id + '_audioStatus');
@@ -3965,8 +4183,8 @@ function handlePeerAudioBtn(peer_id) {
 }
 
 /**
- * Hide Video to specific user in the room
- * @param {*} peer_id
+ * Hide Video to specified peer in the room
+ * @param {string} peer_id socket.id
  */
 function handlePeerVideoBtn(peer_id) {
     let peerVideoBtn = getId(peer_id + '_videoStatus');
@@ -3977,8 +4195,8 @@ function handlePeerVideoBtn(peer_id) {
 
 /**
  * Send Private Message to specific peer
- * @param {*} peer_id
- * @param {*} toPeerName
+ * @param {string} peer_id socket.id
+ * @param {string} toPeerName peer name to send message
  */
 function handlePeerPrivateMsg(peer_id, toPeerName) {
     let peerPrivateMsg = getId(peer_id + '_privateMsg');
@@ -3988,7 +4206,7 @@ function handlePeerPrivateMsg(peer_id, toPeerName) {
             background: swalBackground,
             position: 'center',
             imageUrl: messageImg,
-            title: 'Send direct message',
+            title: 'Send private message',
             input: 'text',
             showCancelButton: true,
             confirmButtonText: `Send`,
@@ -4000,13 +4218,14 @@ function handlePeerPrivateMsg(peer_id, toPeerName) {
             },
         }).then((result) => {
             if (result.value) {
-                let pMsg = result.value;
+                let pMsg = checkMsg(result.value);
+                if (!pMsg) return;
                 emitMsg(myPeerName, toPeerName, pMsg, true);
                 appendMessage(
                     myPeerName,
                     rightChatAvatar,
                     'right',
-                    pMsg + '<br/><hr>Direct message to ' + toPeerName,
+                    pMsg + '<br/><hr>Private message to ' + toPeerName,
                     true,
                 );
                 userLog('toast', 'Message sent to ' + toPeerName + ' 👍');
@@ -4016,8 +4235,19 @@ function handlePeerPrivateMsg(peer_id, toPeerName) {
 }
 
 /**
+ * Handle peer send file
+ * @param {string} peer_id
+ */
+function handlePeerSendFile(peer_id) {
+    let peerFileSendBtn = getId(peer_id + '_shareFile');
+    peerFileSendBtn.onclick = () => {
+        selectFileToShare(peer_id);
+    };
+}
+
+/**
  * Send YouTube video to specific peer
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function handlePeerYouTube(peer_id) {
     let peerYoutubeBtn = getId(peer_id + '_youtube');
@@ -4028,8 +4258,8 @@ function handlePeerYouTube(peer_id) {
 
 /**
  * Set Participant Video Status Icon and Title
- * @param {*} peer_id
- * @param {*} status
+ * @param {string} peer_id socket.id
+ * @param {boolean} status of peer video
  */
 function setPeerVideoStatus(peer_id, status) {
     let peerVideoAvatarImage = getId(peer_id + '_avatar');
@@ -4037,14 +4267,14 @@ function setPeerVideoStatus(peer_id, status) {
     if (peerVideoAvatarImage) peerVideoAvatarImage.style.display = status ? 'none' : 'block';
     if (peerVideoStatus) {
         peerVideoStatus.className = 'fas fa-video' + (status ? '' : '-slash');
-        setTippy(peerVideoStatus, status ? 'Participant video is ON' : 'Participant video is OFF', 'bottom');
+        setTippy(peerVideoStatus, status ? 'Participant video is on' : 'Participant video is off', 'bottom');
         status ? playSound('on') : playSound('off');
     }
 }
 
 /**
  * Emit actions to all peers in the same room except yourself
- * @param {*} peerAction muteAudio hideVideo start/stop recording ...
+ * @param {object} peerAction to all peers
  */
 function emitPeersAction(peerAction) {
     if (!thereIsPeerConnections()) return;
@@ -4058,9 +4288,9 @@ function emitPeersAction(peerAction) {
 }
 
 /**
- * Emit actions to specified peers in the same room
- * @param {*} peer_id
- * @param {*} peerAction
+ * Emit actions to specified peer in the same room
+ * @param {string} peer_id socket.id
+ * @param {object} peerAction to specified peer
  */
 function emitPeerAction(peer_id, peerAction) {
     if (!thereIsPeerConnections()) return;
@@ -4075,7 +4305,7 @@ function emitPeerAction(peer_id, peerAction) {
 
 /**
  * Handle received peer actions
- * @param {*} config
+ * @param {object} config data
  */
 function handlePeerAction(config) {
     let peer_name = config.peer_name;
@@ -4094,11 +4324,18 @@ function handlePeerAction(config) {
         case 'recStop':
             notifyRecording(peer_name, 'Stopped');
             break;
+        case 'screenStart':
+            if (!isMobileDevice) setAspectRatio(2); // 16:9
+            break;
+        case 'screenStop':
+            if (!isMobileDevice) adaptAspectRatio();
+            break;
     }
 }
 
 /**
  * Set my Audio off and Popup the peer name that performed this action
+ * @param {string} peer_name peer name
  */
 function setMyAudioOff(peer_name) {
     if (myAudioStatus === false) return;
@@ -4112,6 +4349,7 @@ function setMyAudioOff(peer_name) {
 
 /**
  * Set my Video off and Popup the peer name that performed this action
+ * @param {string} peer_name peer name
  */
 function setMyVideoOff(peer_name) {
     if (myVideoStatus === false) return;
@@ -4125,7 +4363,7 @@ function setMyVideoOff(peer_name) {
 
 /**
  * Mute or Hide everyone except yourself
- * @param {*} element audio/video
+ * @param {string} element type audio/video
  */
 function disableAllPeers(element) {
     if (!thereIsPeerConnections()) {
@@ -4168,8 +4406,8 @@ function disableAllPeers(element) {
 
 /**
  * Mute or Hide specific peer
- * @param {*} peer_id
- * @param {*} element audio/video
+ * @param {string} peer_id socket.id
+ * @param {string} element type audio/video
  */
 function disablePeer(peer_id, element) {
     if (!thereIsPeerConnections()) {
@@ -4211,59 +4449,100 @@ function disablePeer(peer_id, element) {
 }
 
 /**
- * Lock Unlock the room from unauthorized access
+ * Handle Room action
+ * @param {object} config data
+ * @param {boolean} emit data to signaling server
  */
-function lockUnlockRoom() {
-    lockUnlockRoomBtn.className = roomLocked ? 'fas fa-lock-open' : 'fas fa-lock';
+function handleRoomAction(config, emit = false) {
+    if (emit) {
+        let thisConfig = {
+            room_id: roomId,
+            peer_name: myPeerName,
+            action: config.action,
+            password: null,
+        };
+        switch (config.action) {
+            case 'lock':
+                playSound('newMessage');
 
-    if (roomLocked) {
-        roomLocked = false;
-        emitRoomStatus();
+                Swal.fire({
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showDenyButton: true,
+                    background: swalBackground,
+                    imageUrl: roomLockedImg,
+                    input: 'text',
+                    inputPlaceholder: 'Set Room password',
+                    confirmButtonText: `OK`,
+                    denyButtonText: `Cancel`,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown',
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp',
+                    },
+                    inputValidator: (pwd) => {
+                        if (!pwd) return 'Please enter the Room password';
+                        thisRoomPassword = pwd;
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        thisConfig.password = thisRoomPassword;
+                        sendToServer('roomAction', thisConfig);
+                        handleRoomStatus(thisConfig);
+                    }
+                });
+                break;
+            case 'unlock':
+                sendToServer('roomAction', thisConfig);
+                handleRoomStatus(thisConfig);
+                break;
+        }
     } else {
-        roomLocked = true;
-        emitRoomStatus();
-        playSound('locked');
+        // data coming from signaling server
+        handleRoomStatus(config);
     }
 }
 
 /**
- * Refresh Room Status (Locked/Unlocked)
- */
-function emitRoomStatus() {
-    let rStatus = roomLocked ? '🔒 LOCKED the room, no one can access!' : '🔓 UNLOCKED the room';
-    userLog('toast', rStatus);
-
-    sendToServer('roomStatus', {
-        room_id: roomId,
-        room_locked: roomLocked,
-        peer_name: myPeerName,
-    });
-}
-
-/**
- * Handle Room Status (Lock - Unlock)
- * @param {*} config
+ * Handle room status
+ * @param {object} config data
  */
 function handleRoomStatus(config) {
+    let action = config.action;
     let peer_name = config.peer_name;
-    let room_locked = config.room_locked;
-    roomLocked = room_locked;
-    lockUnlockRoomBtn.className = roomLocked ? 'fas fa-lock' : 'fas fa-lock-open';
-    userLog('toast', peer_name + ' set room is locked to ' + roomLocked);
+    switch (action) {
+        case 'lock':
+            playSound('locked');
+            userLog('toast', peer_name + ' has 🔒 LOCKED the room by password', 'top-end');
+            hide(lockRoomBtn);
+            show(unlockRoomBtn);
+            break;
+        case 'unlock':
+            userLog('toast', peer_name + ' has 🔓 UNLOCKED the room', 'top-end');
+            hide(unlockRoomBtn);
+            show(lockRoomBtn);
+            break;
+        case 'checkPassword':
+            let password = config.password;
+            password == 'OK' ? joinToChannel() : handleRoomLocked();
+            break;
+    }
 }
 
 /**
- * Room is Locked can't access...
+ * Room is locked you provide a wrong password, can't access!
  */
 function handleRoomLocked() {
-    playSound('kickedOut');
+    playSound('eject');
 
+    console.log('Room is Locked, try with another one');
     Swal.fire({
         allowOutsideClick: false,
         background: swalBackground,
         position: 'center',
         imageUrl: roomLockedImg,
-        title: 'Oops, Room Locked',
+        title: 'Oops, Wrong Room Password',
         text: 'The room is locked, try with another one.',
         showDenyButton: false,
         confirmButtonText: `Ok`,
@@ -4275,6 +4554,44 @@ function handleRoomLocked() {
         },
     }).then((result) => {
         if (result.isConfirmed) openURL('/newcall');
+    });
+}
+
+/**
+ * Try to unlock the room by providing a valid password
+ */
+function handleUnlockTheRoom() {
+    playSound('alert');
+
+    Swal.fire({
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        background: swalBackground,
+        imageUrl: roomLockedImg,
+        title: 'Oops, Room is Locked',
+        input: 'text',
+        inputPlaceholder: 'Enter the Room password',
+        confirmButtonText: `OK`,
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp',
+        },
+        inputValidator: (pwd) => {
+            if (!pwd) return 'Please enter the Room password';
+            thisRoomPassword = pwd;
+        },
+    }).then(() => {
+        let config = {
+            room_id: roomId,
+            peer_name: myPeerName,
+            action: 'checkPassword',
+            password: thisRoomPassword,
+        };
+        sendToServer('roomAction', config);
+        hide(lockRoomBtn);
+        show(unlockRoomBtn);
     });
 }
 
@@ -4344,8 +4661,8 @@ function setupWhiteboardCanvasSize() {
 
 /**
  * Whiteboard: setup size
- * @param {*} w width
- * @param {*} h height
+ * @param {string} w width
+ * @param {string} h height
  */
 function setWhiteboardSize(w, h) {
     document.documentElement.style.setProperty('--wb-width', w);
@@ -4354,7 +4671,7 @@ function setWhiteboardSize(w, h) {
 
 /**
  * Whiteboard: drawing mode
- * @param {*} status true or false
+ * @param {boolean} status of drawing mode
  */
 function whiteboardIsDrawingMode(status) {
     wbCanvas.isDrawingMode = status;
@@ -4371,7 +4688,7 @@ function whiteboardIsDrawingMode(status) {
 
 /**
  * Whiteboard: eraser
- * @param {*} status true or false
+ * @param {boolean} status if eraser on
  */
 function whiteboardIsEraser(status) {
     whiteboardIsDrawingMode(false);
@@ -4381,8 +4698,8 @@ function whiteboardIsEraser(status) {
 
 /**
  * Set color to specific element
- * @param {*} elem
- * @param {*} color
+ * @param {object} elem element
+ * @param {string} color to set
  */
 function setColor(elem, color) {
     elem.style.color = color;
@@ -4390,7 +4707,7 @@ function setColor(elem, color) {
 
 /**
  * Whiteboard: Add object to canvas
- * @param {*} type object
+ * @param {string} type of object to add
  */
 function whiteboardAddObj(type) {
     switch (type) {
@@ -4509,7 +4826,7 @@ function whiteboardAddObj(type) {
 
 /**
  * Whiteboard: add object
- * @param {*} obj
+ * @param {object} obj to add
  */
 function addWbCanvasObj(obj) {
     if (obj) {
@@ -4539,7 +4856,7 @@ function setupWhiteboardLocalListners() {
 
 /**
  * Whiteboard: mouse down
- * @param {*} e
+ * @param {object} e event
  * @returns
  */
 function mouseDown(e) {
@@ -4582,7 +4899,7 @@ function objectAdded() {
 
 /**
  * Whiteboard: set background color
- * @param {*} color
+ * @param {string} color to set
  */
 function wbCanvasBackgroundColor(color) {
     document.documentElement.style.setProperty('--wb-bg', color);
@@ -4630,8 +4947,8 @@ function wbCanvasSaveImg() {
 
 /**
  * Whiteboard: save data to file
- * @param {*} dataURL
- * @param {*} fileName
+ * @param {object} dataURL to download
+ * @param {string} fileName to save
  */
 function saveDataToFile(dataURL, fileName) {
     const a = document.createElement('a');
@@ -4668,7 +4985,7 @@ function wbUpdate() {
 
 /**
  * Whiteboard: json to canvas objects
- * @param {*} config
+ * @param {object} config data
  */
 function handleJsonToWbCanvas(config) {
     if (!wbIsOpen) toggleWhiteboard();
@@ -4679,8 +4996,8 @@ function handleJsonToWbCanvas(config) {
 
 /**
  * Whiteboard: actions
- * @param {*} action
- * @returns json
+ * @param {string} action whiteboard action
+ * @returns {object} data
  */
 function getWhiteboardAction(action) {
     return {
@@ -4721,7 +5038,7 @@ function confirmCleanBoard() {
 
 /**
  * Whiteboard: actions
- * @param {*} config
+ * @param {object} config data
  */
 function whiteboardAction(config) {
     if (thereIsPeerConnections()) {
@@ -4732,8 +5049,8 @@ function whiteboardAction(config) {
 
 /**
  * Whiteboard: handle actions
- * @param {*} config
- * @param {*} logme
+ * @param {object} config data
+ * @param {boolean} logme popup action
  */
 function handleWhiteboardAction(config, logme = true) {
     if (logme) {
@@ -4761,7 +5078,7 @@ function handleWhiteboardAction(config, logme = true) {
 
 /**
  * Create File Sharing Data Channel
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function createFileSharingDataChannel(peer_id) {
     fileDataChannels[peer_id] = peerConnections[peer_id].createDataChannel('kmmeet_file_sharing_channel');
@@ -4773,7 +5090,7 @@ function createFileSharingDataChannel(peer_id) {
 
 /**
  * Handle File Sharing
- * @param {*} data
+ * @param {object} data received
  */
 function handleDataChannelFileSharing(data) {
     if (!receiveInProgress) return;
@@ -4794,8 +5111,11 @@ function handleDataChannelFileSharing(data) {
  * Send File Data trought datachannel
  * https://webrtc.github.io/samples/src/content/datachannel/filetransfer/
  * https://github.com/webrtc/samples/blob/gh-pages/src/content/datachannel/filetransfer/js/main.js
+ *
+ * @param {string} peer_id peer id
+ * @param {boolean} broadcast sent to all or not
  */
-function sendFileData() {
+function sendFileData(peer_id, broadcast) {
     console.log('Send file ' + fileToSend.name + ' size ' + bytesToSize(fileToSend.size) + ' type ' + fileToSend.type);
 
     sendInProgress = true;
@@ -4822,8 +5142,13 @@ function sendFileData() {
         if (!sendInProgress) return;
 
         // peer to peer over DataChannels
-        sendFSData(e.target.result);
-        offset += e.target.result.byteLength;
+        let data = {
+            peer_id: peer_id,
+            broadcast: broadcast,
+            fileData: e.target.result,
+        };
+        sendFSData(data);
+        offset += data.fileData.byteLength;
 
         sendProgress.value = offset;
         sendFilePercentage.innerHTML = 'Send progress: ' + ((offset / fileToSend.size) * 100).toFixed(2) + '%';
@@ -4846,11 +5171,23 @@ function sendFileData() {
 
 /**
  * Send File through RTC Data Channels
- * @param {*} data fileReader e.target.result
+ * @param {object} data to sent
  */
 function sendFSData(data) {
-    for (let peer_id in fileDataChannels) {
-        if (fileDataChannels[peer_id].readyState === 'open') fileDataChannels[peer_id].send(data);
+    let broadcast = data.broadcast;
+    let peer_id_to_send = data.peer_id;
+    if (broadcast) {
+        // send to all peers
+        for (let peer_id in fileDataChannels) {
+            if (fileDataChannels[peer_id].readyState === 'open') fileDataChannels[peer_id].send(data.fileData);
+        }
+    } else {
+        // send to peer
+        for (let peer_id in fileDataChannels) {
+            if (peer_id_to_send == peer_id && fileDataChannels[peer_id].readyState === 'open') {
+                fileDataChannels[peer_id].send(data.fileData);
+            }
+        }
     }
 }
 
@@ -4891,8 +5228,10 @@ function hideFileTransfer() {
 
 /**
  * Select the File to Share
+ * @param {string} peer_id
+ * @param {boolean} broadcast send to all (default false)
  */
-function selectFileToShare() {
+function selectFileToShare(peer_id, broadcast = false) {
     playSound('newMessage');
 
     Swal.fire({
@@ -4918,37 +5257,51 @@ function selectFileToShare() {
         },
     }).then((result) => {
         if (result.isConfirmed) {
-            fileToSend = result.value;
-            if (fileToSend && fileToSend.size > 0) {
-                // no peers in the room
-                if (!thereIsPeerConnections()) {
-                    userLog('info', 'No participants detected');
-                    return;
-                }
-                // send some metadata about our file to peers in the room
-                sendToServer('fileInfo', {
-                    room_id: roomId,
-                    peer_name: myPeerName,
-                    file: {
-                        fileName: fileToSend.name,
-                        fileSize: fileToSend.size,
-                        fileType: fileToSend.type,
-                    },
-                });
-                // send the File
-                setTimeout(() => {
-                    sendFileData();
-                }, 1000);
-            } else {
-                userLog('error', 'File not selected or empty.');
-            }
+            sendFileInformations(result.value, peer_id, broadcast);
         }
     });
 }
 
 /**
+ * Send file informations
+ * @param {object} file data
+ * @param {string} peer_id
+ * @param {boolean} broadcast send to all (default false)
+ * @returns
+ */
+function sendFileInformations(file, peer_id, broadcast = false) {
+    fileToSend = file;
+    // check if valid
+    if (fileToSend && fileToSend.size > 0) {
+        // no peers in the room
+        if (!thereIsPeerConnections()) {
+            userLog('info', 'No participants detected');
+            return;
+        }
+        // send some metadata about our file to peers in the room
+        sendToServer('fileInfo', {
+            room_id: roomId,
+            broadcast: broadcast,
+            peer_name: myPeerName,
+            peer_id: peer_id,
+            file: {
+                fileName: fileToSend.name,
+                fileSize: fileToSend.size,
+                fileType: fileToSend.type,
+            },
+        });
+        // send the File
+        setTimeout(() => {
+            sendFileData(peer_id, broadcast);
+        }, 1000);
+    } else {
+        userLog('error', 'File dragged not valid or empty.');
+    }
+}
+
+/**
  * Get remote file info
- * @param {*} config file
+ * @param {object} config data
  */
 function handleFileInfo(config) {
     incomingFileInfo = config;
@@ -4956,7 +5309,7 @@ function handleFileInfo(config) {
     receiveBuffer = [];
     receivedSize = 0;
     let fileToReceiveInfo =
-        ' From: ' +
+        'From: ' +
         incomingFileInfo.peerName +
         '<br />' +
         ' Incoming file: ' +
@@ -5043,8 +5396,8 @@ function endDownload() {
 /**
  * Save to PC / Mobile devices
  * https://developer.mozilla.org/en-US/docs/Web/API/Blob
- * @param {*} blob
- * @param {*} file
+ * @param {object} blob content
+ * @param {string} file to save
  */
 function saveBlobToFile(blob, file) {
     const url = window.URL.createObjectURL(blob);
@@ -5062,7 +5415,7 @@ function saveBlobToFile(blob, file) {
 
 /**
  * Opend and send Video URL to all peers in the room
- *
+ * @param {string} peer_id socket.id
  */
 function sendVideoUrl(peer_id = null) {
     playSound('newMessage');
@@ -5072,7 +5425,7 @@ function sendVideoUrl(peer_id = null) {
         position: 'center',
         imageUrl: youtubeImg,
         title: 'Share YouTube Video',
-        text: 'Past YouTube video URL',
+        text: 'Paste YouTube video URL',
         input: 'text',
         showCancelButton: true,
         confirmButtonText: `Share`,
@@ -5123,8 +5476,8 @@ function openVideoUrlPlayer(config) {
 
 /**
  * Get youtube embed URL
- * @param {*} url
- * @returns Youtube Embed URL
+ * @param {string} url of YouTube video
+ * @returns {string} YouTube Embed URL
  */
 function getYoutubeEmbed(url) {
     let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -5144,8 +5497,8 @@ function closeVideoUrlPlayer() {
 
 /**
  * Emit video palyer to peers
- * @param {*} video_action
- * @param {*} config
+ * @param {string} video_action type
+ * @param {object} config data
  */
 function emitVideoPlayer(video_action, config = {}) {
     sendToServer('videoPlayer', {
@@ -5159,7 +5512,7 @@ function emitVideoPlayer(video_action, config = {}) {
 
 /**
  * Handle Video Player
- * @param {*} config
+ * @param {object} config data
  */
 function handleVideoPlayer(config) {
     let peer_name = config.peer_name;
@@ -5179,21 +5532,20 @@ function handleVideoPlayer(config) {
 
 /**
  * Handle peer kick out event button
- * @param {*} peer_id
+ * @param {string} peer_id socket.id
  */
 function handlePeerKickOutBtn(peer_id) {
     let peerKickOutBtn = getId(peer_id + '_kickOut');
     peerKickOutBtn.addEventListener('click', (e) => {
-        kickOut(peer_id, peerKickOutBtn);
+        kickOut(peer_id);
     });
 }
 
 /**
- * Kick out confirm
- * @param {*} peer_id
- * @param {*} peerKickOutBtn
+ * Eject peer, confirm before
+ * @param {string} peer_id socket.id
  */
-function kickOut(peer_id, peerKickOutBtn) {
+function kickOut(peer_id) {
     let pName = getId(peer_id + '_name').innerHTML;
 
     Swal.fire({
@@ -5225,12 +5577,12 @@ function kickOut(peer_id, peerKickOutBtn) {
 
 /**
  * You will be kicked out from the room and popup the peer name that performed this action
- * @param {*} config
+ * @param {object} config data
  */
 function handleKickedOut(config) {
     let peer_name = config.peer_name;
 
-    playSound('kickedOut');
+    playSound('eject');
 
     let timerInterval;
 
@@ -5280,15 +5632,17 @@ function showAbout() {
     Swal.fire({
         background: swalBackground,
         position: 'center',
-        title: '<strong>KMMEET</strong>',
+        title: '<strong>WebRTC P2P</strong>',
         imageAlt: 'kmmeet-about',
         imageUrl: aboutImg,
         html: `
         <br/>
         <div id="about">
-            <b>Open Source Video Conferencing Project</a></b>
+            <b><a href="https://github.com/miroslavpejic85/kmmeet" target="_blank">Open Source</a></b> project
             <br/><br/>
-            Author: Ankan Group</a>
+            <button class="pulsate" onclick="window.open('https://github.com/sponsors/miroslavpejic85?o=esb')"><i class="fas fa-heart" ></i>&nbsp;Sponsor</button>
+            <br /><br />
+            Author:<a href="https://www.linkedin.com/in/miroslav-pejic-976a07101/" target="_blank"> Miroslav Pejic</a>
         </div>
         `,
         showClass: {
@@ -5304,40 +5658,18 @@ function showAbout() {
  * Leave the Room and create a new one
  */
 function leaveRoom() {
-    playSound('newMessage');
-
-    Swal.fire({
-        background: swalBackground,
-        position: 'center',
-        imageAlt: 'kmmeet-leave',
-        imageUrl: leaveRoomImg,
-        title: 'Do you want to leave this room?',
-        showDenyButton: true,
-        confirmButtonText: `Yes`,
-        denyButtonText: `No`,
-        showClass: {
-            popup: 'animate__animated animate__fadeInDown',
-        },
-        hideClass: {
-            popup: 'animate__animated animate__fadeOutUp',
-        },
-    }).then((result) => {
-        if (result.isConfirmed) {
-            if (surveyActive) {
-                openURL(surveyURL);
-            } else {
-                openURL('/newcall');
-            }
-        }
-    });
+    playSound('eject');
+    if (surveyActive) {
+        openURL(surveyURL);
+    } else {
+        openURL('/newcall');
+    }
 }
 
 /**
- * Make Obj draggable
- * https://www.w3schools.com/howto/howto_js_draggable.asp
- *
- * @param {*} elmnt
- * @param {*} dragObj
+ * Make Obj draggable: https://www.w3schools.com/howto/howto_js_draggable.asp
+ * @param {object} elmnt father element
+ * @param {object} dragObj children element to make father draggable (click + mouse move)
  */
 function dragElement(elmnt, dragObj) {
     let pos1 = 0,
@@ -5384,9 +5716,8 @@ function dragElement(elmnt, dragObj) {
 }
 
 /**
- * Data Formated DD-MM-YYYY-H_M_S
- * https://convertio.co/it/
- * @returns data string
+ * Date Format: https://convertio.co/it/
+ * @returns {string} date string format: DD-MM-YYYY-H_M_S
  */
 function getDataTimeString() {
     const d = new Date();
@@ -5397,8 +5728,8 @@ function getDataTimeString() {
 
 /**
  * Convert bytes to KB-MB-GB-TB
- * @param {*} bytes
- * @returns size
+ * @param {object} bytes to convert
+ * @returns {string} converted size
  */
 function bytesToSize(bytes) {
     let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -5409,6 +5740,7 @@ function bytesToSize(bytes) {
 
 /**
  * Handle peer audio volume
+ * @param {object} data peer audio
  */
 function handlePeerVolume(data) {
     let peer_id = data.peer_id;
@@ -5430,6 +5762,7 @@ function handlePeerVolume(data) {
 
 /**
  * Handle my audio volume
+ * @param {object} data my audio
  */
 function handleMyVolume(data) {
     let element = getId('myPitchBar');
@@ -5449,8 +5782,8 @@ function handleMyVolume(data) {
 
 /**
  * Basic user logging using https://sweetalert2.github.io
- * @param {*} type
- * @param {*} message
+ * @param {string} type of popup
+ * @param {string} message to popup
  */
 function userLog(type, message) {
     switch (type) {
@@ -5517,7 +5850,7 @@ function userLog(type, message) {
 
 /**
  * https://notificationsounds.com/notification-sounds
- * @param {*} name
+ * @param {string} name audio to play
  */
 async function playSound(name) {
     if (!notifyBySound) return;
@@ -5534,6 +5867,8 @@ async function playSound(name) {
 
 /**
  * Open specified URL
+ * @param {string} url to open
+ * @param {boolean} blank if true opne url in the new tab
  */
 function openURL(url, blank = false) {
     blank ? window.open(url, '_blank') : (window.location.href = url);
@@ -5541,8 +5876,8 @@ function openURL(url, blank = false) {
 
 /**
  * Show-Hide all elements grp by class name
- * @param {*} className
- * @param {*} displayState
+ * @param {string} className to toggle
+ * @param {string} displayState of the element
  */
 function toggleClassElements(className, displayState) {
     let elements = getEcN(className);
@@ -5553,7 +5888,8 @@ function toggleClassElements(className, displayState) {
 
 /**
  * Get Html element by Id
- * @param {*} id
+ * @param {string} id of the element
+ * @returns {object} element
  */
 function getId(id) {
     return document.getElementById(id);
@@ -5561,7 +5897,8 @@ function getId(id) {
 
 /**
  * Get Html element by selector
- * @param {*} selector
+ * @param {string} selector of the element
+ * @returns {object} element
  */
 function getSl(selector) {
     return document.querySelector(selector);
@@ -5569,8 +5906,25 @@ function getSl(selector) {
 
 /**
  * Get Html element by class name
- * @param {*} className
+ * @param {string} className of the element
+ * @returns {object} element
  */
 function getEcN(className) {
     return document.getElementsByClassName(className);
+}
+
+/**
+ * Hide elemnt
+ * @param {object} elem
+ */
+function hide(elem) {
+    elem.className = 'hidden';
+}
+
+/**
+ * Show elemnt
+ * @param {object} elem
+ */
+function show(elem) {
+    elem.className = '';
 }

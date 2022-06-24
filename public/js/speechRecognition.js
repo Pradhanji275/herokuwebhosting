@@ -40,7 +40,6 @@ const langs = [
         ['es-UY', 'Uruguay'],
         ['es-VE', 'Venezuela'],
     ],
-    ['ˈjərmən', ['gr-GR']],
     ['Euskara', ['eu-ES']],
     ['Français', ['fr-FR']],
     ['Galego', ['gl-ES']],
@@ -162,7 +161,7 @@ function handleRecognitionLanguages() {
 
 /**
  * Start or Stop speech recognition
- * @param {*} config
+ * @param {object} config data
  */
 function startSpeech(config) {
     if (isWebkitSpeechRecognitionSupported) {

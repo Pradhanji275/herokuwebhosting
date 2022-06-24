@@ -1,6 +1,6 @@
 ---
 name: "\U0001F41B Bug report"
-about: File a bug report to help improve KMMEET.
+about: File a bug report to help improve MiroTalk.
 title: ''
 labels: ''
 assignees: ''

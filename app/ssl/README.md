@@ -1,6 +1,6 @@
-## Expose KMMEET on HTTPS
+## Expose MiroTalk on HTTPS
 
-![kmmeet-https](https.png)
+![mirotalk-https](https.png)
 
 1. Generate a `self-signed certificate`
 
@@ -29,12 +29,4 @@ const isHttps = true;
 
 ```js
 const isHttps = true;
-
-function getSignalingServer() {
-    if (isHttps) {
-        return 'https://' + location.hostname + ':' + signalingServerPort;
-        // if need: change it with YOUR-SERVER-DOMAIN-NAME
-    }
-    //...
-}
 ```

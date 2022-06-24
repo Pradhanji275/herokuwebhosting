@@ -8,25 +8,28 @@ http://patorjk.com/software/taag/#p=display&f=ANSI%20Regular&t=Server
 ███████ ███████ ██   ██   ████   ███████ ██   ██                                           
 
 dependencies: {
-    compression : https://www.npmjs.com/package/compression
-    cors        : https://www.npmjs.com/package/cors
-    dotenv      : https://www.npmjs.com/package/dotenv
-    express     : https://www.npmjs.com/package/express
-    ngrok       : https://www.npmjs.com/package/ngrok
-    socket.io   : https://www.npmjs.com/package/socket.io
-    swagger     : https://www.npmjs.com/package/swagger-ui-express
-    uuid        : https://www.npmjs.com/package/uuid
-    yamljs      : https://www.npmjs.com/package/yamljs
+    compression             : https://www.npmjs.com/package/compression
+    cors                    : https://www.npmjs.com/package/cors
+    dotenv                  : https://www.npmjs.com/package/dotenv
+    express                 : https://www.npmjs.com/package/express
+    ngrok                   : https://www.npmjs.com/package/ngrok
+    @sentry/node            : https://www.npmjs.com/package/@sentry/node
+    @sentry/integrations    : https://www.npmjs.com/package/@sentry/integrations
+    socket.io               : https://www.npmjs.com/package/socket.io
+    swagger                 : https://www.npmjs.com/package/swagger-ui-express
+    uuid                    : https://www.npmjs.com/package/uuid
+    yamljs                  : https://www.npmjs.com/package/yamljs
 }
 */
 
 /**
- * KMMEET P2P - Server component
+ * MiroTalk P2P - Server component
  *
- * @link    https://kmmeet.herokuapp.com
+ * @link    GitHub: https://github.com/miroslavpejic85/mirotalk
+ * @link    Live demo: https://p2p.mirotalk.org or https://mirotalk.up.railway.app or https://mirotalk.herokuapp.com
  * @license For open source use: AGPLv3
- *          For commercial use: kmmeet#commercial-license-or-closed-source
- * @author  Ankan Group - ankanpradhan275@gmail.com
+ * @license For commercial or closed source, contact us at info.mirotalk@gmail.com
+ * @author  Miroslav Pejic - miroslav.pejic.85@gmail.com
  * @version 1.0.0
  *
  */
@@ -70,6 +73,7 @@ if (isHttps) {
 */
 io = new Server({
     maxHttpBufferSize: 1e7,
+    transports: ['websocket'],
 }).listen(server);
 
 // console.log(io);
@@ -87,14 +91,39 @@ const api_key_secret = process.env.API_KEY_SECRET || 'kmmeet_default_secret';
 
 // Ngrok config
 const ngrok = require('ngrok');
-const ngrokEnabled = process.env.NGROK_ENABLED;
+const ngrokEnabled = process.env.NGROK_ENABLED || false;
 const ngrokAuthToken = process.env.NGROK_AUTH_TOKEN;
 
 // Turn config
-const turnEnabled = process.env.TURN_ENABLED;
+const turnEnabled = process.env.TURN_ENABLED || false;
 const turnUrls = process.env.TURN_URLS;
 const turnUsername = process.env.TURN_USERNAME;
 const turnCredential = process.env.TURN_PASSWORD;
+
+// Sentry config
+const Sentry = require('@sentry/node');
+const { CaptureConsole } = require('@sentry/integrations');
+const sentryEnabled = process.env.SENTRY_ENABLED || false;
+const sentryDSN = process.env.SENTRY_DSN;
+const sentryTracesSampleRate = process.env.SENTRY_TRACES_SAMPLE_RATE;
+
+// Setup sentry client
+if (sentryEnabled == 'true') {
+    Sentry.init({
+        dsn: sentryDSN,
+        integrations: [
+            new CaptureConsole({
+                // array of methods that should be captured
+                // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
+                levels: ['warn', 'error'],
+            }),
+        ],
+        // Set tracesSampleRate to 1.0 to capture 100%
+        // of transactions for performance monitoring.
+        // We recommend adjusting this value in production
+        tracesSampleRate: sentryTracesSampleRate,
+    });
+}
 
 // directory
 const dir = {
@@ -168,17 +197,13 @@ app.get('/join/', (req, res) => {
     if (Object.keys(req.query).length > 0) {
         log.debug('Request Query', req.query);
         /* 
-            http://localhost:3000/join?room=test&name=kmmeet&audio=1&video=1&notify=1
-            https://kmmeet.up.railway.app/join?room=test&name=kmmeet&audio=1&video=1&notify=1
-            https://kmmeet.herokuapp.com/join?room=test&name=kmmeet&audio=1&video=1&notify=1
+            http://localhost:3000/join?room=test&name=kmmeet&audio=1&video=1&screen=1&notify=1
+            https://mirotalk.up.railway.app/join?room=test&name=mirotalk&audio=1&video=1&screen=1&notify=1
+            https://mirotalk.herokuapp.com/join?room=test&name=mirotalk&audio=1&video=1&screen=1&notify=1
         */
-        let roomName = req.query.room;
-        let peerName = req.query.name;
-        let peerAudio = req.query.audio;
-        let peerVideo = req.query.video;
-        let notify = req.query.notify;
+        const { room, name, audio, video, screen, notify } = req.query;
         // all the params are mandatory for the direct room join
-        if (roomName && peerName && peerAudio && peerVideo && notify) {
+        if (room && name && audio && video && screen && notify) {
             return res.sendFile(view.client);
         }
     }
@@ -231,7 +256,7 @@ function getMeetingURL(host) {
     return 'http' + (host.includes('localhost') ? '' : 's') + '://' + host + '/join/' + uuidV4();
 }
 
-// end of KMMEET API v1
+// end of MiroTalk API v1
 
 // not match any of page before, so 404 not found
 app.get('*', function (req, res) {
@@ -242,9 +267,9 @@ app.get('*', function (req, res) {
  * You should probably use a different stun-turn server
  * doing commercial stuff, also see:
  *
+ * https://github.com/coturn/coturn
  * https://gist.github.com/zziuni/3741933
  * https://www.twilio.com/docs/stun-turn
- * https://github.com/coturn/coturn
  *
  * Check the functionality of STUN/TURN servers:
  * https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/
@@ -263,25 +288,15 @@ if (turnEnabled == 'true') {
         },
     );
 } else {
-    // Thanks to https://www.metered.ca/tools/openrelay/
+    // My own As backup if not configured, please configure your in the .env file
     iceServers.push(
         {
-            urls: 'stun:openrelay.metered.ca:80',
+            urls: 'stun:stun.l.google.com:19302',
         },
         {
-            urls: 'turn:openrelay.metered.ca:80',
-            username: 'openrelayproject',
-            credential: 'openrelayproject',
-        },
-        {
-            urls: 'turn:openrelay.metered.ca:443',
-            username: 'openrelayproject',
-            credential: 'openrelayproject',
-        },
-        {
-            urls: 'turn:openrelay.metered.ca:443?transport=tcp',
-            username: 'openrelayproject',
-            credential: 'openrelayproject',
+            urls: 'turn:numb.viagenie.ca',
+            username: 'miroslav.pejic.85@gmail.com',
+            credential: 'mirotalkp2p',
         },
     );
 }
@@ -310,9 +325,11 @@ async function ngrokStart() {
             server_tunnel: tunnelHttps,
             api_docs: api_docs,
             api_key_secret: api_key_secret,
+            sentry_enabled: sentryEnabled,
+            node_version: process.versions.node,
         });
     } catch (err) {
-        console.error('[Error] ngrokStart', err);
+        log.warn('[Error] ngrokStart', err.body);
         process.exit(1);
     }
 }
@@ -345,11 +362,14 @@ server.listen(port, null, () => {
             server: host,
             api_docs: api_docs,
             api_key_secret: api_key_secret,
+            sentry_enabled: sentryEnabled,
+            node_version: process.versions.node,
         });
     }
 });
 
 /**
+ * On peer connected
  * Users will connect to the signaling server, after which they'll issue a "join"
  * to join a particular channel. The signaling server keeps track of all sockets
  * who are in a channel, and on join will send out 'addPeer' events to each pair
@@ -358,13 +378,23 @@ server.listen(port, null, () => {
  * need to relay ICECandidate information to one another, as well as SessionDescription
  * information. After all of that happens, they'll finally be able to complete
  * the peer connection and will be in streaming audio/video between eachother.
- * On peer connected
  */
 io.sockets.on('connect', (socket) => {
     log.debug('[' + socket.id + '] connection accepted');
 
     socket.channels = {};
     sockets[socket.id] = socket;
+
+    const transport = socket.conn.transport.name; // in most cases, "polling"
+    log.debug('[' + socket.id + '] Connection transport', transport);
+
+    /**
+     * Check upgrade transport
+     */
+    socket.conn.on('upgrade', () => {
+        const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
+        log.debug('[' + socket.id + '] Connection upgraded transport', upgradedTransport);
+    });
 
     /**
      * On peer diconnected
@@ -384,6 +414,7 @@ io.sockets.on('connect', (socket) => {
         log.debug('[' + socket.id + '] join ', config);
 
         let channel = config.channel;
+        let channel_password = config.channel_password;
         let peer_name = config.peer_name;
         let peer_video = config.peer_video;
         let peer_audio = config.peer_audio;
@@ -401,7 +432,7 @@ io.sockets.on('connect', (socket) => {
         if (!(channel in peers)) peers[channel] = {};
 
         // room locked by the participants can't join
-        if (peers[channel]['Locked'] === true) {
+        if (peers[channel]['lock'] === true && peers[channel]['password'] != channel_password) {
             log.debug('[' + socket.id + '] [Warning] Room Is Locked', channel);
             socket.emit('roomIsLocked');
             return;
@@ -421,11 +452,14 @@ io.sockets.on('connect', (socket) => {
 
         channels[channel][socket.id] = socket;
         socket.channels[channel] = channel;
+
+        // Send some server info to joined peer
+        sendToPeer(socket.id, sockets, 'serverInfo', { peers_count: Object.keys(peers[channel]).length });
     });
 
     /**
-     * Add peers to channel aka room
-     * @param {*} channel
+     * Add peers to channel
+     * @param {string} channel room id
      */
     async function addPeerTo(channel) {
         for (let id in channels[channel]) {
@@ -448,28 +482,26 @@ io.sockets.on('connect', (socket) => {
     }
 
     /**
-     * Remove peers from channel aka room
-     * @param {*} channel
+     * Remove peers from channel
+     * @param {string} channel room id
      */
     async function removePeerFrom(channel) {
         if (!(channel in socket.channels)) {
             log.debug('[' + socket.id + '] [Warning] not in ', channel);
             return;
         }
-
-        delete socket.channels[channel];
-        delete channels[channel][socket.id];
-        delete peers[channel][socket.id];
-
-        switch (Object.keys(peers[channel]).length) {
-            case 0:
-                // last peer disconnected from the room without room status set, delete room data
-                delete peers[channel];
-                break;
-            case 1:
-                // last peer disconnected from the room having room status set, delete room data
-                if ('Locked' in peers[channel]) delete peers[channel];
-                break;
+        try {
+            delete socket.channels[channel];
+            delete channels[channel][socket.id];
+            delete peers[channel][socket.id]; // delete peer data from the room
+            switch (Object.keys(peers[channel]).length) {
+                case 0: // last peer disconnected from the room without room lock & password set
+                case 2: // last peer disconnected from the room having room lock & password set
+                    delete peers[channel]; // clean lock and password value from the room
+                    break;
+            }
+        } catch (err) {
+            log.error('Remove Peer', toJson(err));
         }
         log.debug('connected peers grp by roomId', peers);
 
@@ -515,21 +547,44 @@ io.sockets.on('connect', (socket) => {
     });
 
     /**
-     * Refresh Room Status (Locked/Unlocked)
+     * Handle Room action
      */
-    socket.on('roomStatus', (config) => {
+    socket.on('roomAction', (config) => {
+        //log.debug('[' + socket.id + '] Room action:', config);
+        let room_is_locked = false;
         let room_id = config.room_id;
-        let room_locked = config.room_locked;
         let peer_name = config.peer_name;
-
-        peers[room_id]['Locked'] = room_locked;
-
-        log.debug('[' + socket.id + '] emit roomStatus' + ' to [room_id: ' + room_id + ' locked: ' + room_locked + ']');
-
-        sendToRoom(room_id, socket.id, 'roomStatus', {
-            peer_name: peer_name,
-            room_locked: room_locked,
-        });
+        let password = config.password;
+        let action = config.action;
+        //
+        switch (action) {
+            case 'lock':
+                peers[room_id]['lock'] = true;
+                peers[room_id]['password'] = password;
+                sendToRoom(room_id, socket.id, 'roomAction', {
+                    peer_name: peer_name,
+                    action: action,
+                });
+                room_is_locked = true;
+                break;
+            case 'unlock':
+                peers[room_id]['lock'] = false;
+                peers[room_id]['password'] = password;
+                sendToRoom(room_id, socket.id, 'roomAction', {
+                    peer_name: peer_name,
+                    action: action,
+                });
+                break;
+            case 'checkPassword':
+                let config = {
+                    peer_name: peer_name,
+                    action: action,
+                    password: password === peers[room_id]['password'] ? 'OK' : 'KO',
+                };
+                sendToPeer(socket.id, sockets, 'roomAction', config);
+                break;
+        }
+        log.debug('[' + socket.id + '] Room ' + room_id, { locked: room_is_locked, password: password });
     });
 
     /**
@@ -571,7 +626,7 @@ io.sockets.on('connect', (socket) => {
         let status = config.status;
 
         for (let peer_id in peers[room_id]) {
-            if (peers[room_id][peer_id]['peer_name'] == peer_name) {
+            if (peers[room_id][peer_id]['peer_name'] === peer_name) {
                 switch (element) {
                     case 'video':
                         peers[room_id][peer_id]['peer_video'] = status;
@@ -654,6 +709,8 @@ io.sockets.on('connect', (socket) => {
     socket.on('fileInfo', (config) => {
         let room_id = config.room_id;
         let peer_name = config.peer_name;
+        let peer_id = config.peer_id;
+        let broadcast = config.broadcast;
         let file = config.file;
 
         function bytesToSize(bytes) {
@@ -670,9 +727,14 @@ io.sockets.on('connect', (socket) => {
             fileName: file.fileName,
             fileSize: bytesToSize(file.fileSize),
             fileType: file.fileType,
+            broadcast: broadcast,
         });
 
-        sendToRoom(room_id, socket.id, 'fileInfo', file);
+        if (broadcast) {
+            sendToRoom(room_id, socket.id, 'fileInfo', file);
+        } else {
+            sendToPeer(peer_id, sockets, 'fileInfo', file);
+        }
     });
 
     /**
@@ -701,7 +763,7 @@ io.sockets.on('connect', (socket) => {
             video_action: video_action,
             video_src: video_src,
         };
-        let logme = {
+        let logMe = {
             peer_id: socket.id,
             peer_name: peer_name,
             video_action: video_action,
@@ -711,12 +773,12 @@ io.sockets.on('connect', (socket) => {
         if (peer_id) {
             log.debug(
                 '[' + socket.id + '] emit videoPlayer to [' + peer_id + '] from room_id [' + room_id + ']',
-                logme,
+                logMe,
             );
 
             sendToPeer(peer_id, sockets, 'videoPlayer', sendConfig);
         } else {
-            log.debug('[' + socket.id + '] emit videoPlayer to [room_id: ' + room_id + ']', logme);
+            log.debug('[' + socket.id + '] emit videoPlayer to [room_id: ' + room_id + ']', logMe);
 
             sendToRoom(room_id, socket.id, 'videoPlayer', sendConfig);
         }
@@ -739,30 +801,41 @@ io.sockets.on('connect', (socket) => {
 }); // end [sockets.on-connect]
 
 /**
+ * Object to Json
+ * @param {object} data object
+ * @returns {json} indent 4 spaces
+ */
+function toJson(data) {
+    return JSON.stringify(data, null, 4); // "\t"
+}
+
+/**
  * Send async data to all peers in the same room except yourself
- * @param {*} room_id id of the room to send data
- * @param {*} socket_id socket id of peer that send data
- * @param {*} msg message to send to the peers in the same room
- * @param {*} config JSON data to send to the peers in the same room
+ * @param {string} room_id id of the room to send data
+ * @param {string} socket_id socket id of peer that send data
+ * @param {string} msg message to send to the peers in the same room
+ * @param {object} config data to send to the peers in the same room
  */
 async function sendToRoom(room_id, socket_id, msg, config = {}) {
     for (let peer_id in channels[room_id]) {
         // not send data to myself
         if (peer_id != socket_id) {
             await channels[room_id][peer_id].emit(msg, config);
+            //console.log('Send to room', { msg: msg, config: config });
         }
     }
 }
 
 /**
  * Send async data to specified peer
- * @param {*} peer_id id of the peer to send data
- * @param {*} sockets all peers connections
- * @param {*} msg message to send to the peer in the same room
- * @param {*} config JSON data to send to the peer in the same room
+ * @param {string} peer_id id of the peer to send data
+ * @param {object} sockets all peers connections
+ * @param {string} msg message to send to the peer in the same room
+ * @param {object} config data to send to the peer in the same room
  */
 async function sendToPeer(peer_id, sockets, msg, config = {}) {
     if (peer_id in sockets) {
         await sockets[peer_id].emit(msg, config);
+        //console.log('Send to peer', { msg: msg, config: config });
     }
 }

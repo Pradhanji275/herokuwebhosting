@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <!-- https://github.com/mikecao/umami -->
 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XM60XK9RQ"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-
-            gtag('config', 'G-3XM60XK9RQ', { cookie_flags: 'SameSite=None;Secure' });
-        </script>
-
+        <script
+            async
+            defer
+            data-website-id="a378bd09-212d-4801-94cc-9797b6a5f3f7"
+            src="https://stats.kmmeet.org/umami.js"
+        ></script>
         <!-- Title and Icon -->
 
         <title>KMMEET The Video Conferencing Platform.</title>
@@ -43,8 +37,8 @@
         <meta property="og:site_name" content="KMMEET" />
         <meta property="og:title" content="Click the link to join this call." />
         <meta property="og:description" content="Free WebRTC browser-based video call." />
-        <meta property="og:image" content="https://kmmeet.up.railway.app/images/preview.png" />
-        <meta property="og:url" content="https://kmmeet.herokuapp.com/" />
+        <meta property="og:image" content="https://p2p.kmmeet.com/images/preview.png" />
+        <meta property="og:url" content="https://p2p.mirotalk.org" />
         <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon.png" />
 
         <!-- StyleSheet -->
@@ -81,6 +75,7 @@ access to use this app.
             </pre>
             </div>
         </div>
+
         <!-- Start buttons bar
         https://fontawesome.com/icons?d=gallery
         -->
@@ -115,8 +110,8 @@ access to use this app.
                     <div class="msger-header-title"><button id="msgerClose" class="fas fa-times"></button></div>
                     <div class="msger-header-options">
                         <button id="msgerTheme" class="fas fa-ghost"></button>
-                        <button id="msgerClean" class="fas fa-trash"></button>
                         <button id="msgerSaveBtn" class="fas fa-save"></button>
+                        <button id="msgerClean" class="fas fa-trash"></button>
                     </div>
                 </header>
 
@@ -147,7 +142,7 @@ access to use this app.
             <section id="msgerCP" class="center fadein">
                 <section id="msgerCPSec" class="msger">
                     <header id="msgerCPHeader" class="msger-private-header">
-                        <div class="msger-header-title"><i class="fas fa-comment-alt"></i> Search peer by name</div>
+                        <div class="msger-header-title"><i class="fas fa-comment-alt"></i> Send Private messages</div>
                         <div class="msger-header-options">
                             <button id="msgerCPCloseBtn" class="fas fa-times"></button>
                         </div>
@@ -183,8 +178,8 @@ access to use this app.
                     </div>
                     <div class="msger-header-options">
                         <button id="captionTheme" class="fas fa-ghost"></button>
-                        <button id="captionClean" class="fas fa-trash"></button>
                         <button id="captionSaveBtn" class="fas fa-save"></button>
+                        <button id="captionClean" class="fas fa-trash"></button>
                     </div>
                 </header>
 
@@ -214,6 +209,7 @@ access to use this app.
                     <button id="tabBandwidthBtn" class="fas fa-wifi tablinks"></button>
                     <button id="tabRoomBtn" class="fas fa-home tablinks"></button>
                     <button id="tabStylingBtn" class="fas fa-palette tablinks"></button>
+                    <button id="tabLanguagesBtn" class="fas fa-globe tablinks"></button>
                 </div>
 
                 <div id="tabDevices" class="tabcontent">
@@ -287,9 +283,8 @@ access to use this app.
                         <button id="hideEveryoneBtn"><i class="fas fa-video"></i>&nbsp;Hide everyone</button>
                         <br /><br />
                         <label>Security</label><br />
-                        <button id="lockUnlockRoomBtn">
-                            <i id="lockUnlockRoomIco" class="fas fa-lock-open"></i>&nbsp;Lock/unlock room
-                        </button>
+                        <button id="lockRoomBtn"><i class="fas fa-lock-open"></i>&nbsp;Lock room</button>
+                        <button id="unlockRoomBtn" class="hidden"><i class="fas fa-lock"></i>&nbsp;Unlock room</button>
                     </div>
                 </div>
 
@@ -318,6 +313,11 @@ access to use this app.
                         <option value="vertical">🚦 Vertical</option>
                         <option value="horizontal">🚥 Horizontal</option>
                     </select>
+                </div>
+
+                <div id="tabLanguages" class="tabcontent">
+                    <br />
+                    <div id="google_translate_element"></div>
                 </div>
             </main>
         </section>
@@ -426,8 +426,22 @@ access to use this app.
         <!-- end of Js scripts -->
 
         <!-- 
-        the <video> and <audio> tags are all added and removed dynamically
-        in 'onAddStream', 'setupLocalMedia', and 'removePeer'/'disconnect'
+		the <video> and <audio> tags are all added and removed dynamically
+		in 'onAddStream', 'setupLocalMedia', and 'removePeer'/'disconnect'
+		-->
+
+        <!-- 
+            Start Google Translate 
+            https://www.w3schools.com/howto/howto_google_translate.asp
         -->
+
+        <script>
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+            }
+        </script>
+        <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+        <!-- End Google Translate -->
     </body>
 </html>

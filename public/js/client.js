@@ -26,7 +26,7 @@ const roomId = getRoomId();
 const peerInfo = getPeerInfo();
 const peerLoockupUrl = 'https://extreme-ip-lookup.com/json/?key=demo2';
 const avatarApiUrl = 'https://eu.ui-avatars.com/api';
-const surveyURL = 'https://kmmeet9593876760529432075807.herokuapp.com/';
+const surveyURL = 'https://kmmeetvideoconference.herokuapp.com/';
 const welcomeImg = '../images/image-placeholder.png';
 const shareUrlImg = '../images/image-placeholder.png';
 const leaveRoomImg = '../images/leave-room.png';

@@ -26,7 +26,7 @@ const roomId = getRoomId();
 const peerInfo = getPeerInfo();
 const peerLoockupUrl = 'https://extreme-ip-lookup.com/json/?key=demo2'; // get your API Key at https://extreme-ip-lookup.com
 const avatarApiUrl = 'https://eu.ui-avatars.com/api';
-const surveyURL = 'https://www.questionpro.com/t/AUs7VZq00L';
+const surveyURL = 'https://kmmeetvideoconference.herokuapp.com/join/22024RareShark';
 const welcomeImg = '../images/image-placeholder.png';
 const shareUrlImg = '../images/image-placeholder.png';
 const leaveRoomImg = '../images/leave-room.png';
@@ -431,7 +431,7 @@ function setButtonsToolTip() {
     setTippy(chatRoomBtn, 'Open the chat', 'right-start');
     setTippy(captionBtn, 'Open the caption', 'right-start');
     setTippy(myHandBtn, 'Raise your hand', 'right-start');
-    setTippy(whiteboardBtn, 'Open the whiteboard', 'right-start');
+    setTippy(whiteboardBtn, 'Open the liveboard', 'right-start');
     setTippy(fileShareBtn, 'Share file', 'right-start');
     setTippy(mySettingsBtn, 'Open settings', 'right-start');
     setTippy(aboutBtn, 'Project info', 'right-start');

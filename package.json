@@ -10,7 +10,7 @@
     },
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://git.heroku.com/kmmeetvideoconference.git"
     },
     "author": "Miroslav Pejic",
     "license": "AGPL-3.0",

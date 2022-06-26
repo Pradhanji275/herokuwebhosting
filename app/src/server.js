@@ -23,13 +23,13 @@ dependencies: {
 */
 
 /**
- * MiroTalk P2P - Server component
+ * KMMEET P2P - Server component
  *
- * @link    GitHub: https://github.com/miroslavpejic85/mirotalk
- * @link    Live demo: https://p2p.mirotalk.org or https://mirotalk.up.railway.app or https://mirotalk.herokuapp.com
+ * @link    GitHub: https://github.com/kmmeet85/kmmeet
+ * @link    Live demo: https://p2p.kmmeet.org or https://kmmeet.up.railway.app or https://kmmeet.herokuapp.com
  * @license For open source use: AGPLv3
- * @license For commercial or closed source, contact us at info.mirotalk@gmail.com
- * @author  Miroslav Pejic - miroslav.pejic.85@gmail.com
+ * @license For commercial or closed source, contact us at info.kmmeet@gmail.com
+ * @author  Ankan Grup - ankan.85@gmail.com
  * @version 1.0.0
  *
  */
@@ -198,8 +198,8 @@ app.get('/join/', (req, res) => {
         log.debug('Request Query', req.query);
         /* 
             http://localhost:3000/join?room=test&name=kmmeet&audio=1&video=1&screen=1&notify=1
-            https://mirotalk.up.railway.app/join?room=test&name=mirotalk&audio=1&video=1&screen=1&notify=1
-            https://mirotalk.herokuapp.com/join?room=test&name=mirotalk&audio=1&video=1&screen=1&notify=1
+            https://kmmeet.up.railway.app/join?room=test&name=kmmeet&audio=1&video=1&screen=1&notify=1
+            https://kmmeet.herokuapp.com/join?room=test&name=kmmeet&audio=1&video=1&screen=1&notify=1
         */
         const { room, name, audio, video, screen, notify } = req.query;
         // all the params are mandatory for the direct room join
@@ -256,7 +256,7 @@ function getMeetingURL(host) {
     return 'http' + (host.includes('localhost') ? '' : 's') + '://' + host + '/join/' + uuidV4();
 }
 
-// end of MiroTalk API v1
+// end of KMMEET API v1
 
 // not match any of page before, so 404 not found
 app.get('*', function (req, res) {

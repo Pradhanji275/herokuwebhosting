@@ -5655,15 +5655,38 @@ function showAbout() {
 /**
  * Leave the Room and create a new one
  */
-function leaveRoom() {
-    playSound('eject');
-    if (surveyActive) {
-        openURL(surveyURL);
-    } else {
-        openURL('/newcall');
-    }
-}
 
+/**
+ * Leave the Room and create a new one
+ */
+function leaveRoom() {
+    playSound('newMessage');
+
+    Swal.fire({
+        background: swalBackground,
+        position: 'center',
+        imageAlt: 'kmmeet-leave',
+        imageUrl: leaveRoomImg,
+        title: 'Do you want to leave this room?',
+        showDenyButton: true,
+        confirmButtonText: `Yes`,
+        denyButtonText: `No`,
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp',
+        },
+    }).then((result) => {
+        if (result.isConfirmed) {
+            if (surveyActive) {
+                openURL(surveyURL);
+            } else {
+                openURL('/newcall');
+            }
+        }
+    });
+}
 /**
  * Make Obj draggable: https://www.w3schools.com/howto/howto_js_draggable.asp
  * @param {object} elmnt father element
